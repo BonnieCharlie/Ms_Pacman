@@ -1,0 +1,50 @@
+package pacman.entries.pacman;
+
+import pacman.game.Constants;
+import pacman.game.Game;
+import pacman.game.internal.Ghost;
+
+import java.util.ArrayList;
+
+public class Utils {
+
+    public static float EvaluationFunction(Game game){
+
+        int score = game.getScore();
+        int posPacman = game.getPacmanCurrentNodeIndex();
+        int distance=-1;
+        int oldDistance = distance;
+        Constants.GHOST nearestghost;
+        for (Constants.GHOST ghost: Constants.GHOST.values()) {
+            if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0){
+                distance = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
+                if(distance < oldDistance){
+                    oldDistance = distance;
+                    nearestghost = ghost;
+                }
+            }
+        }
+
+        int[] pills=game.getPillIndices();
+        int[] powerPills=game.getPowerPillIndices();
+
+        ArrayList<Integer> targets=new ArrayList<Integer>();
+
+        for(int i=0;i<pills.length;i++)					//check which pills are available
+            if(game.isPillStillAvailable(i))
+                targets.add(pills[i]);
+
+        for(int i=0;i<powerPills.length;i++)			//check with power pills are available
+            if(game.isPowerPillStillAvailable(i))
+                targets.add(powerPills[i]);
+
+        int[] targetsArray=new int[targets.size()];		//convert from ArrayList to array
+
+        for(int i=0;i<targetsArray.length;i++)
+            targetsArray[i]=targets.get(i);
+
+        int minDistanceToNextPill =  game.getManhattanDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman,targetsArray, Constants.DM.MANHATTAN));
+
+        return score + 1/minDistanceToNextPill - 1/oldDistance;
+    }
+}
