@@ -3,7 +3,7 @@ package pacman.entries.pacman;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
-import pacman.game.internal.PacMan;
+import java.util.ArrayList;
 
 public class MyMsPacMan {
 
@@ -12,7 +12,18 @@ public class MyMsPacMan {
     public MOVE getMove(Game game, long timeDue)
     {
         //Place your game logic here to play the game as Ms Pac-Man
-
+        int depth = 4;
+        int currentNode = game.getPacmanCurrentNodeIndex();
+        ArrayList currentNodes = new ArrayList<Integer>();
+        currentNodes.add(currentNode);
+        for (GHOST ghost: GHOST.values()){
+            currentNodes.add(game.getGhostCurrentNodeIndex(ghost));
+        }
+        float utility = expectiminimax(game, depth, 0, 2, currentNodes); //????????
+        float maximum = -1000;
+        if (utility > maximum){
+            maximum = utility;
+        }
         return myMove;
     }
 
@@ -21,28 +32,28 @@ public class MyMsPacMan {
         return utility;
     }
 
-    private float expectiminimax(Game game, int depth, int agentType, int num_agents){
+    private float expectiminimax(Game game, int depth, int agentType, int num_agents, ArrayList<Integer> index){
         int absolute_depth = 4;
-        int currentNode = game.getPacmanCurrentNodeIndex();
 
         // if currentNode is a final state, it returns the utility
         if (game.gameOver() || depth == absolute_depth){
             return evaluationFunction(game);
         }
 
-        // if currentNode is a MAX node
+        // if agentType is a MAX node
          if (agentType == 0){ // agentType 0 is Pacman while others are Ghosts
              float max = 0;
-             MOVE[] possibleMoves=game.getPossibleMoves(game.getPacmanCurrentNodeIndex(),game.getPacmanLastMoveMade());
-             for (MOVE newState: possibleMoves) {
-                 float value = expectiminimax(game, depth, 1, num_agents)*(1/possibleMoves.length); // non è fatta bene la chiamata
+             int[] neighbouringNodes = game.getNeighbouringNodes(index.get(agentType));
+             for (int i=0; i<neighbouringNodes.length; i++) { //for (MOVE move: possibleMoves)
+                 index.set(i, neighbouringNodes[i]);
+                 float value = expectiminimax(game, depth, 1, num_agents, index)*(1/neighbouringNodes.length); // non è fatta bene la chiamata
                  if(value > max)
                      max = value;
              }
              return max;
          }
 
-        // if currentNode is a MIN node with possibility
+        // if agentType is a MIN node with possibility
         else {
              int nextAgentType = agentType + 1;
              if (num_agents == nextAgentType)
@@ -51,10 +62,10 @@ public class MyMsPacMan {
                  depth += 1;
 
              float sum = 0;
-             GHOST[] ghosts = GHOST.values();
-             MOVE[] possibleMoves = game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghosts[nextAgentType + 1]), game.getGhostLastMoveMade(ghosts[nextAgentType + 1]));
-             for (MOVE newState : possibleMoves) {
-                 sum += expectiminimax(game, depth, nextAgentType, num_agents) * (1 / possibleMoves.length); // non è fatta bene la chiamata
+             int[] neighbouringNodes = game.getNeighbouringNodes(index.get(nextAgentType));
+             for (int i=0; i<neighbouringNodes.length; i++) {
+                 index.set(i, neighbouringNodes[i]);
+                 sum += expectiminimax(game, depth, nextAgentType, num_agents, index) * (1 / neighbouringNodes.length); // non è fatta bene la chiamata
              }
              return sum;
          }
