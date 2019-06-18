@@ -29,11 +29,11 @@ public class MyMsPacMan {
                 myMove = move;
             }
         }
-        
+
         return myMove;
     }
 
-    private float evaluationFunction(Game game){
+    private float evaluationFunction(Game game, ArrayList<Integer> index){
         int utility = 1;
         return utility;
     }
@@ -43,7 +43,7 @@ public class MyMsPacMan {
 
         // if currentNode is a final state, it returns the utility
         if (game.gameOver() || depth == absolute_depth){
-            return evaluationFunction(game);
+            return evaluationFunction(game, index);
         }
 
         // if agentType is a MAX node

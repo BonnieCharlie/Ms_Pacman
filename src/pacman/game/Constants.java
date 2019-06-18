@@ -32,10 +32,10 @@ public final class Constants
 	 */
 	public enum GHOST
 	{
-		BLINKY(10000000), //40
+		BLINKY(40), //40
 		PINKY(10000000), //60
 		INKY(10000000), //80
-		SUE(40); //100
+		SUE(10000000); //100
 		
 		public final int initialLairTime;
 		
