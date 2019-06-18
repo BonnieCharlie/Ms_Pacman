@@ -43,19 +43,20 @@ public class MyMsPacMan {
          }
 
         // if currentNode is a MIN node with possibility
-        // else {
-        int nextAgentType = agentType + 1;
-        if (num_agents == nextAgentType)
-            nextAgentType = 0;
-        if (nextAgentType == 0)
-            depth += 1;
+        else {
+             int nextAgentType = agentType + 1;
+             if (num_agents == nextAgentType)
+                 nextAgentType = 0;
+             if (nextAgentType == 0)
+                 depth += 1;
 
-        float sum = 0;
-        GHOST[] ghosts = GHOST.values();
-        MOVE[] possibleMoves=game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghosts[nextAgentType+1]),game.getGhostLastMoveMade(ghosts[nextAgentType+1]));
-        for (MOVE newState: possibleMoves) {
-            sum += expectiminimax(game, depth, nextAgentType, num_agents)*(1/possibleMoves.length); // non è fatta bene la chiamata
-        }
-        return sum;
+             float sum = 0;
+             GHOST[] ghosts = GHOST.values();
+             MOVE[] possibleMoves = game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghosts[nextAgentType + 1]), game.getGhostLastMoveMade(ghosts[nextAgentType + 1]));
+             for (MOVE newState : possibleMoves) {
+                 sum += expectiminimax(game, depth, nextAgentType, num_agents) * (1 / possibleMoves.length); // non è fatta bene la chiamata
+             }
+             return sum;
+         }
     }
 }
