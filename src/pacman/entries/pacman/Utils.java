@@ -2,13 +2,18 @@ package pacman.entries.pacman;
 
 import pacman.game.Constants;
 import pacman.game.Game;
-import pacman.game.internal.Ghost;
 
 import java.util.ArrayList;
 
 public class Utils {
 
-    public static float EvaluationFunction(Game game){
+    public static double EvaluationFunction(Game game){
+
+        if(game.getNumberOfActivePills()+game.getNumberOfActivePowerPills() == 0){
+            return Double.POSITIVE_INFINITY;
+        }else if(game.wasPacManEaten()){
+            return Double.NEGATIVE_INFINITY;
+        }
 
         int score = game.getScore();
         int posPacman = game.getPacmanCurrentNodeIndex();
