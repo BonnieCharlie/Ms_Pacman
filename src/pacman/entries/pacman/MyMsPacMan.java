@@ -19,11 +19,17 @@ public class MyMsPacMan {
         for (GHOST ghost: GHOST.values()){
             currentNodes.add(game.getGhostCurrentNodeIndex(ghost));
         }
-        float utility = expectiminimax(game, depth, 0, 2, currentNodes); //????????
         float maximum = -1000;
-        if (utility > maximum){
-            maximum = utility;
+        float utility = maximum;
+        MOVE[] possibleMoves=game.getPossibleMoves(game.getPacmanCurrentNodeIndex(),game.getPacmanLastMoveMade());
+        for (MOVE move : possibleMoves){
+            utility = expectiminimax(game, depth, 0, 2, currentNodes);
+            if (utility > maximum){
+                maximum = utility;
+                myMove = move;
+            }
         }
+        
         return myMove;
     }
 
