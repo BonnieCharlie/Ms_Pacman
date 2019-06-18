@@ -11,7 +11,7 @@ public class Utils {
 
         if(game.getNumberOfActivePills()+game.getNumberOfActivePowerPills() == 0){
             return Double.POSITIVE_INFINITY;
-        }else if(game.wasPacManEaten()){
+        }else if(game.gameOver() || game.wasPacManEaten()){
             return Double.NEGATIVE_INFINITY;
         }
 
