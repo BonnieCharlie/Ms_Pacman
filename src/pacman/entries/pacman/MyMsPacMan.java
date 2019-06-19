@@ -1,11 +1,12 @@
 package pacman.entries.pacman;
 
+import pacman.controllers.Controller;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import java.util.ArrayList;
 
-public class MyMsPacMan {
+public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove= MOVE.NEUTRAL;
 
@@ -81,6 +82,7 @@ public class MyMsPacMan {
         //Return a game copy with modified State
 
         String gameState = "";
+
         //MAZE STATE
         gameState += String.valueOf(game.getMazeIndex()) + ",";
         gameState += String.valueOf(game.getTotalTime()) + ",";
@@ -127,6 +129,8 @@ public class MyMsPacMan {
             }
         }
         gameState+=binaryPowerPills;
+
+        // BOOLEAN STATE
         gameState += String.valueOf(game.getTimeOfLastGlobalReversal()) + ",";
         gameState += String.valueOf(game.wasPacManEaten())+ ",";
 
