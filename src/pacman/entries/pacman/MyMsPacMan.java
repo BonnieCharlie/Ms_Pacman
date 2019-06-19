@@ -53,7 +53,7 @@ public class MyMsPacMan extends Controller<MOVE> {
              int i=0;
              for (i=0; i<neighbouringNodes.length; i++) { //for (MOVE move: possibleMoves)
                  index.set(i, neighbouringNodes[i]);
-                 float value = expectiminimax(GameCopy(game.copy(), index), depth, 1, num_agents, index)*(1/(float)neighbouringNodes.length); // non è fatta bene la chiamata
+                 float value = expectiminimax(GameCopy(game.copy(), index), depth, 1, num_agents, index);
                  if(value > max){
                      max = value;
                      correctIndex = i;
