@@ -15,21 +15,29 @@ public class MyMsPacMan extends Controller<MOVE> {
     {
         //Place your game logic here to play the game as Ms Pac-Man
         int currentNode = game.getPacmanCurrentNodeIndex();
+
+        float maximum = -1000;
+        float utility = maximum;
+        int[] neighbouringNodes = game.getNeighbouringNodes(currentNode); // possibili mosse di pacman
+
         ArrayList currentNodes = new ArrayList<Integer>();
         currentNodes.add(currentNode);
         for (GHOST ghost: GHOST.values()){
             currentNodes.add(game.getGhostCurrentNodeIndex(ghost));
         }
-        float maximum = -1000;
-        float utility = maximum;
+        // Dobbiamo correggere la mossa di pacman
+
         MOVE[] possibleMoves=game.getPossibleMoves(game.getPacmanCurrentNodeIndex(),game.getPacmanLastMoveMade());
+        int count = 0;
         for (MOVE move : possibleMoves){
+            currentNodes.set(count, neighbouringNodes[count]);
             utility = expectiminimax(game, 0, 1, 2, currentNodes);
             System.out.println("Moves: "+ move + "\tUtility: " + utility);
             if (utility > maximum){
                 maximum = utility;
                 myMove = move;
             }
+            count++;
         }
 
         return myMove;
