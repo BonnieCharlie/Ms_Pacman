@@ -38,8 +38,8 @@ public class MyMsPacMan extends Controller<MOVE> {
 
     private float expectiminimax(Game game, int depth, int agentType, int num_agents, ArrayList<Integer> index){
 
-        // if currentNode is a final state, it returns the utility
-        if (game.gameOver() || depth == absolute_depth){
+        // if this node is a final state, it returns the utility
+        if (game.gameOver() || (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills()) == 0 || depth == absolute_depth){
             float eval = (float) Utils.EvaluationFunction(game);
             return eval;
         }
