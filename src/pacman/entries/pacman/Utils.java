@@ -9,11 +9,13 @@ public class Utils {
 
     public static double EvaluationFunction(Game game){
 
+        /*
         if(game.getNumberOfActivePills()+game.getNumberOfActivePowerPills() == 0){
             return Double.POSITIVE_INFINITY;
         }else if(game.gameOver() || game.wasPacManEaten()){
             return Double.NEGATIVE_INFINITY;
         }
+        */
 
         int score = game.getScore();
         int posPacman = game.getPacmanCurrentNodeIndex();
@@ -49,6 +51,9 @@ public class Utils {
             targetsArray[i]=targets.get(i);
 
         float minDistanceToNextPill =  game.getManhattanDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman,targetsArray, Constants.DM.MANHATTAN));
+        if (minDistanceToNextPill==0.0){
+            minDistanceToNextPill = 1;
+        }
         double value= 1/minDistanceToNextPill - 1/oldDistance ;
 
         return value;

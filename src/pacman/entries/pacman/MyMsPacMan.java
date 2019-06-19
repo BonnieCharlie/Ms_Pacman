@@ -9,11 +9,11 @@ import java.util.ArrayList;
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove= MOVE.NEUTRAL;
+    private int absolute_depth = 3;
 
     public MOVE getMove(Game game, long timeDue)
     {
         //Place your game logic here to play the game as Ms Pac-Man
-        int depth = 4;
         int currentNode = game.getPacmanCurrentNodeIndex();
         ArrayList currentNodes = new ArrayList<Integer>();
         currentNodes.add(currentNode);
@@ -24,8 +24,8 @@ public class MyMsPacMan extends Controller<MOVE> {
         float utility = maximum;
         MOVE[] possibleMoves=game.getPossibleMoves(game.getPacmanCurrentNodeIndex(),game.getPacmanLastMoveMade());
         for (MOVE move : possibleMoves){
-            utility = expectiminimax(game, depth, 0, 2, currentNodes);
-            //System.out.println("Moves: "+ move + "\tUtility: " + utility);
+            utility = expectiminimax(game, 0, 0, 2, currentNodes);
+            System.out.println("Moves: "+ move + "\tUtility: " + utility);
             if (utility > maximum){
                 maximum = utility;
                 myMove = move;
@@ -37,7 +37,6 @@ public class MyMsPacMan extends Controller<MOVE> {
 
 
     private float expectiminimax(Game game, int depth, int agentType, int num_agents, ArrayList<Integer> index){
-        int absolute_depth = 4;
 
         // if currentNode is a final state, it returns the utility
         if (game.gameOver() || depth == absolute_depth){
@@ -49,9 +48,10 @@ public class MyMsPacMan extends Controller<MOVE> {
          if (agentType == 0){ // agentType 0 is Pacman while others are Ghosts
              float max = 0;
              int[] neighbouringNodes = game.getNeighbouringNodes(index.get(agentType));
+             //System.out.println("neighbourlenght:" + neighbouringNodes.length);
              for (int i=0; i<neighbouringNodes.length; i++) { //for (MOVE move: possibleMoves)
                  index.set(i, neighbouringNodes[i]);
-                 float value = expectiminimax(GameCopy(game.copy(), index), depth, 1, num_agents, index)*(1/neighbouringNodes.length); // non è fatta bene la chiamata
+                 float value = expectiminimax(GameCopy(game.copy(), index), depth, 1, num_agents, index)*(1/(float)neighbouringNodes.length); // non è fatta bene la chiamata
                  if(value > max)
                      max = value;
              }
@@ -68,9 +68,10 @@ public class MyMsPacMan extends Controller<MOVE> {
 
              float sum = 0;
              int[] neighbouringNodes = game.getNeighbouringNodes(index.get(nextAgentType));
+             //System.out.println("neighbourlenght:" + neighbouringNodes.length);
              for (int i=0; i<neighbouringNodes.length; i++) {
                  index.set(i, neighbouringNodes[i]);
-                 sum += expectiminimax(GameCopy(game.copy(), index), depth, nextAgentType, num_agents, index) * (1 / neighbouringNodes.length); // non è fatta bene la chiamata
+                 sum += expectiminimax(GameCopy(game.copy(), index), depth, nextAgentType, num_agents, index) * (1 / (float)neighbouringNodes.length); // non è fatta bene la chiamata
              }
              return sum;
          }
@@ -113,7 +114,7 @@ public class MyMsPacMan extends Controller<MOVE> {
                 binaryPills += "0";
             }
         }
-        gameState+=binaryPills;
+        gameState+=binaryPills+",";
 
         //POWERPILLS STATE
         int[] powerPills=game.getPowerPillIndices();
@@ -126,7 +127,7 @@ public class MyMsPacMan extends Controller<MOVE> {
                 binaryPowerPills += "0";
             }
         }
-        gameState+=binaryPowerPills;
+        gameState+=binaryPowerPills + ",";
 
         // BOOLEAN STATE
         gameState += String.valueOf(game.getTimeOfLastGlobalReversal()) + ",";
@@ -140,7 +141,10 @@ public class MyMsPacMan extends Controller<MOVE> {
         gameState+= String.valueOf(game.wasPillEaten())+ ",";
         gameState+= String.valueOf(game.wasPillEaten());
 
+        //System.out.println(game.getGameState());
+        //System.out.println(gameState);
         game.setGameState(gameState);
+
 
         return game;
     }
