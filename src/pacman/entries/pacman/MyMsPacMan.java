@@ -10,7 +10,7 @@ import java.util.EnumMap;
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove= MOVE.NEUTRAL;
-    private int absolute_depth = 1;
+    private int absolute_depth = 4;
 
     public MOVE getMove(Game game, long timeDue)
     {
