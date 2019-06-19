@@ -1,6 +1,7 @@
 package pacman.entries.pacman;
 
 import pacman.game.Constants;
+import pacman.game.Constants.GHOST;
 import pacman.game.Game;
 
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.ArrayList;
 public class Utils {
 
     public static double EvaluationFunction(Game game){
-
 
         if(game.getNumberOfActivePills()+game.getNumberOfActivePowerPills() == 0){
             return Double.POSITIVE_INFINITY;
@@ -34,7 +34,7 @@ public class Utils {
                 }
             }
         }
-
+        /*
         int[] pills=game.getPillIndices();
         int[] powerPills=game.getPowerPillIndices();
 
@@ -54,7 +54,29 @@ public class Utils {
             targetsArray[i]=targets.get(i);
 
         float minDistanceToNextPill =  game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman,targetsArray, Constants.DM.MANHATTAN));
-
+        */
         return oldDistance;
+    }
+
+    public static double InfluenceFunction(Game game){
+        float influence = 0;
+        float p_dots = 1;
+        float p_run = 1;
+        float p_chase = 1;
+        int n_d = game.getNumberOfActivePills()+game.getNumberOfActivePowerPills(); // number of uneated pills
+        int n_totalPills = game.getNumberOfPills()+game.getNumberOfPowerPills();
+        int n_d_signed = n_totalPills - n_d; // number of eated pills
+        int n_r = 0; // number of unedible ghosts
+        for (GHOST ghostType: GHOST.values()){
+            if (game.getGhostEdibleTime(ghostType)==0)
+                n_r++;
+        }
+        int n_c = GHOST.values().length - n_r; // number of edible ghosts
+        float pill_influence = 0;
+        float unedibleGhost_influence = 0;
+        float edibleGhost_influence = 0;
+
+
+        return influence;
     }
 }
