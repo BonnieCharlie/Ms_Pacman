@@ -76,10 +76,10 @@ public class Utils {
         int[] ghostUnedibleIndices = new int[4];
         int[] ghostEdibleIndices = new int[4];
         for (GHOST ghostType: GHOST.values()){
-            if (game.getGhostEdibleTime(ghostType)==0 ) { // || game.getGhostLairTime(ghostType)==0
+            if (!game.isGhostEdible(ghostType) && game.getGhostLairTime(ghostType)==0) { //
                 ghostUnedibleIndices[n_r] = game.getGhostCurrentNodeIndex(ghostType);
                 n_r++;
-            }else{
+            }else if(game.isGhostEdible(ghostType)){
                 ghostEdibleIndices[n_c] = game.getGhostCurrentNodeIndex(ghostType);
                 n_c++;
             }
@@ -114,16 +114,16 @@ public class Utils {
 
 
         for(int k=0; k<n_r; k++) {
-
+            //System.out.println(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]));
             unedibleGhost_influence += p_run * n_d / game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
         }
 
         for(int k=0; k<n_c; k++) {
-            System.out.println(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]));
-            edibleGhost_influence += p_chase / game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
+            //System.out.println(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]));
+            edibleGhost_influence += p_chase / game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
         }
 
-        influence = pill_influence  - unedibleGhost_influence + edibleGhost_influence;
+        influence = pill_influence  -unedibleGhost_influence + edibleGhost_influence;
         System.out.println("Influence: " + influence + ", " + pill_influence +", " + unedibleGhost_influence+", "+  edibleGhost_influence );
         return influence;
     }
