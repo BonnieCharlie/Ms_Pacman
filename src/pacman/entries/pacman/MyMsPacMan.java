@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove= MOVE.NEUTRAL;
-    private int absolute_depth = 3;
+    private int absolute_depth = 1;
 
     public MOVE getMove(Game game, long timeDue)
     {
@@ -24,7 +24,7 @@ public class MyMsPacMan extends Controller<MOVE> {
         float utility = maximum;
         MOVE[] possibleMoves=game.getPossibleMoves(game.getPacmanCurrentNodeIndex(),game.getPacmanLastMoveMade());
         for (MOVE move : possibleMoves){
-            utility = expectiminimax(game, 0, 0, 2, currentNodes);
+            utility = expectiminimax(game, 0, 1, 2, currentNodes);
             System.out.println("Moves: "+ move + "\tUtility: " + utility);
             if (utility > maximum){
                 maximum = utility;
@@ -41,6 +41,7 @@ public class MyMsPacMan extends Controller<MOVE> {
         // if this node is a final state, it returns the utility
         if (game.gameOver() || (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills()) == 0 || depth == absolute_depth){
             float eval = (float) Utils.EvaluationFunction(game);
+            System.out.println(eval);
             return eval;
         }
 

@@ -25,7 +25,9 @@ public class Utils {
         nearestghost = null;
         for (Constants.GHOST ghost: Constants.GHOST.values()) {
             if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0){
-                distance = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
+                //distance = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
+                //distance = game.getManhattanDistance(posPacman,game.getGhostCurrentNodeIndex(ghost));
+                distance = (float) game.getEuclideanDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
                 if(distance < oldDistance){
                     oldDistance = distance;
                     nearestghost = ghost;
@@ -52,9 +54,7 @@ public class Utils {
             targetsArray[i]=targets.get(i);
 
         float minDistanceToNextPill =  game.getManhattanDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman,targetsArray, Constants.DM.MANHATTAN));
-        System.out.println(oldDistance + ", "+nearestghost);
-        double value= minDistanceToNextPill - oldDistance ;
 
-        return value;
+        return oldDistance;
     }
 }
