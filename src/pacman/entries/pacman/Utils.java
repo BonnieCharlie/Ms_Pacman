@@ -50,6 +50,6 @@ public class Utils {
 
         int minDistanceToNextPill =  game.getManhattanDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman,targetsArray, Constants.DM.MANHATTAN));
 
-        return score + 1/minDistanceToNextPill - 1/oldDistance;
+        return 1/minDistanceToNextPill - 1/oldDistance;
     }
 }
