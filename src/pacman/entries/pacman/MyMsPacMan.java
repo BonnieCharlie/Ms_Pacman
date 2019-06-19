@@ -10,7 +10,7 @@ import java.util.EnumMap;
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove= MOVE.NEUTRAL;
-    private int absolute_depth = 4;
+    private int absolute_depth = 2;
 
     public MOVE getMove(Game game, long timeDue)
     {
@@ -23,7 +23,7 @@ public class MyMsPacMan extends Controller<MOVE> {
         for (MOVE move : possibleMoves){
             Game g = game.copy();
             g.updatePacMan(move);
-            utility = expectiminimax(g, 0, 1, 2);
+            utility = expectiminimax(g, 0, 1, 5);
             System.out.println("Moves: "+ move + "\tUtility: " + utility);
             if (utility > maximum){
                 maximum = utility;
@@ -39,8 +39,8 @@ public class MyMsPacMan extends Controller<MOVE> {
 
         // if this node is a final state, it returns the utility
         if (game.gameOver() || (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills()) == 0 || depth == absolute_depth){
-            float eval = (float) Utils.EvaluationFunction(game);
-            System.out.println(eval);
+            float eval = (float) Utils.InfluenceFunction(game);
+            //System.out.println(eval);
             return eval;
         }
 
