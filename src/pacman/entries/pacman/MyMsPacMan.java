@@ -25,6 +25,7 @@ public class MyMsPacMan extends Controller<MOVE> {
         MOVE[] possibleMoves=game.getPossibleMoves(game.getPacmanCurrentNodeIndex(),game.getPacmanLastMoveMade());
         for (MOVE move : possibleMoves){
             utility = expectiminimax(game, depth, 0, 2, currentNodes);
+            //System.out.println("Moves: "+ move + "\tUtility: " + utility);
             if (utility > maximum){
                 maximum = utility;
                 myMove = move;
@@ -34,17 +35,14 @@ public class MyMsPacMan extends Controller<MOVE> {
         return myMove;
     }
 
-    private float evaluationFunction(Game game, ArrayList<Integer> index){
-        int utility = 1;
-        return utility;
-    }
 
     private float expectiminimax(Game game, int depth, int agentType, int num_agents, ArrayList<Integer> index){
         int absolute_depth = 4;
 
         // if currentNode is a final state, it returns the utility
         if (game.gameOver() || depth == absolute_depth){
-            return evaluationFunction(game, index);
+            float eval = (float) Utils.EvaluationFunction(game);
+            return eval;
         }
 
         // if agentType is a MAX node

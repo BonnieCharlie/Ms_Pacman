@@ -17,8 +17,8 @@ public class Utils {
 
         int score = game.getScore();
         int posPacman = game.getPacmanCurrentNodeIndex();
-        int distance=-1;
-        int oldDistance = distance;
+        float distance = 10000;
+        float oldDistance = distance;
         Constants.GHOST nearestghost;
         for (Constants.GHOST ghost: Constants.GHOST.values()) {
             if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0){
@@ -48,8 +48,9 @@ public class Utils {
         for(int i=0;i<targetsArray.length;i++)
             targetsArray[i]=targets.get(i);
 
-        int minDistanceToNextPill =  game.getManhattanDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman,targetsArray, Constants.DM.MANHATTAN));
+        float minDistanceToNextPill =  game.getManhattanDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman,targetsArray, Constants.DM.MANHATTAN));
+        double value= 1/minDistanceToNextPill - 1/oldDistance ;
 
-        return 1/minDistanceToNextPill - 1/oldDistance;
+        return value;
     }
 }
