@@ -1,23 +1,21 @@
 package pacman.entries.pacman;
 
 import pacman.controllers.Controller;
-import pacman.game.Constants;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove = MOVE.NEUTRAL;
-    private int absolute_depth = 4;
+    private int absolute_depth = 2;
 
     public MOVE getMove(Game game, long timeDue) {
         //Place your game logic here to play the game as Ms Pac-Man
-        Long start = System.currentTimeMillis();
+        Long start1 = System.currentTimeMillis();
         float maximum = -1000;
         float utility = maximum;
 
@@ -34,7 +32,7 @@ public class MyMsPacMan extends Controller<MOVE> {
             }
         }
         //System.out.println("Moves: " + myMove + "\tUtility: " + utility);
-        //System.out.println("Time Execution: " + (System.currentTimeMillis() - start));
+        System.out.println("Time Execution: " + (System.currentTimeMillis() - start1));
         return myMove;
     }
 
@@ -52,12 +50,15 @@ public class MyMsPacMan extends Controller<MOVE> {
 
         // if agentType is a MAX node
         else if (agentType == 0) { // agentType 0 is Pacman while others are Ghosts
+            depth += 1;
             float max = 0;
             MOVE[] possibleMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
+            Game g = null;
             for (MOVE move : possibleMoves) { //for (MOVE move: possibleMoves)
-                Game g = game.copy();
+                g = game.copy();
                 g.updatePacMan(move);
                 float value = expectiminimax(g, depth, 1);
+                //System.out.println("Mossa Pacman " + move +" valore_max: " + value);
                 if (value > max) {
                     max = value;
                 }
@@ -67,9 +68,6 @@ public class MyMsPacMan extends Controller<MOVE> {
 
         // if agentType is a MIN node with possibility
         else {
-            int nextAgentType = agentType + 1;
-            depth += 1;
-
             float sum=0;
             ArrayList<ArrayList<MOVE>> movesGhosts = new ArrayList<ArrayList<MOVE>>();
             for(GHOST ghostType : GHOST.values()){
@@ -80,29 +78,24 @@ public class MyMsPacMan extends Controller<MOVE> {
                 }
                 movesGhosts.add(moves);
             }
-            ArrayList<ArrayList<MOVE>>  combinations;
-            /*
-            for(int i = 0; i< movesGhosts.size(); i++){
-
-                if(movesGhosts.get(i).size()==0){
-                    movesGhosts.get(i).add(MOVE.NEUTRAL);
-                }
-            }*/
+            //System.out.println(movesGhosts);
+            ArrayList<EnumMap<GHOST, MOVE>> combinations = combination_between_vectors(movesGhosts.get(0), movesGhosts.get(1), movesGhosts.get(2), movesGhosts.get(3));
+            //System.out.println(combinations);
             //System.out.println(movesGhosts.get(0) +", "+ movesGhosts.get(1)+", "+ movesGhosts.get(2)+", "+ movesGhosts.get(3));
-            combinations = combination_between_two_vectors(movesGhosts.get(0), movesGhosts.get(1), movesGhosts.get(2), movesGhosts.get(3));
             //System.out.println("tempo combinations: " + (System.currentTimeMillis()-start) + "    num_combinations: " + combinations.size() + "  =   " + movesGhosts.get(0).size()* movesGhosts.get(1).size()* movesGhosts.get(2).size()* movesGhosts.get(3).size());
-
+            //System.out.println("number of combinations" + combinations.size());
+            Game g = null;
             for(int i = 0; i<combinations.size(); i++){
-                Game g = game.copy();
-                EnumMap<GHOST, MOVE> map = new EnumMap<GHOST, MOVE>(GHOST.class);
-                for(MOVE move: combinations.get(i)){
-                    for (GHOST ghostType : GHOST.values()) {
-                        map.put(ghostType, move);
-                    }
-                }
-                g.updateGhosts(map);
+                g = game.copy();
+                //System.out.println("index"+ i + "Before update ghost"+ combinations.get(i));
+
+                g.updateGhosts(combinations.get(i));
+
                 long start = System.currentTimeMillis();
-                sum += expectiminimax(g, depth, nextAgentType) * (1 / (float) (combinations.size()));
+                //System.out.println("Combinations prima di expect "+ combinations.get(i) + "Somma intermedia "+ sum);
+                sum += expectiminimax(g, depth, 0) * (1 / (float) (combinations.size()));
+
+                //System.out.println("Combinations "+ combinations.get(i) + "Somma intermedia "+ sum);
                 long tempo_sum = System.currentTimeMillis()-start;
                 if(tempo_sum > 40){
                     System.out.println("AIUTOOOO");
@@ -113,24 +106,32 @@ public class MyMsPacMan extends Controller<MOVE> {
         }
     }
 
-    private ArrayList<ArrayList<MOVE>> combination_between_two_vectors(ArrayList<MOVE> vet1, ArrayList<MOVE> vet2, ArrayList<MOVE> vet3, ArrayList<MOVE> vet4){
-        ArrayList<ArrayList<MOVE>> combination = new ArrayList<ArrayList<MOVE>>();
+    private ArrayList<EnumMap<GHOST, MOVE>> combination_between_vectors(ArrayList<MOVE> vet1, ArrayList<MOVE> vet2, ArrayList<MOVE> vet3, ArrayList<MOVE> vet4){
+        //System.out.println("vettori: " + vet1 + ", " +  vet2 +", " + vet3 + ", "+ vet4);
+        ArrayList<EnumMap<GHOST, MOVE>> combination = new ArrayList<EnumMap<GHOST, MOVE>>();
         for(int i=0; i<vet1.size(); i++){
-            ArrayList<MOVE> comb = new ArrayList<MOVE>();
+            EnumMap<GHOST, MOVE> comb = new EnumMap<GHOST, MOVE>(GHOST.class);
             for(int j=0; j<vet2.size(); j++){
                 for(int k=0; k<vet3.size(); k++){
                     for(int z=0; z<vet4.size(); z++){
-                        comb.add(vet1.get(i));
-                        comb.add(vet2.get(j));
-                        comb.add(vet3.get(k));
-                        comb.add(vet4.get(z));
+                        comb.put(GHOST.values()[0], vet1.get(i));
+                        comb.put(GHOST.values()[1], vet2.get(j));
+                        comb.put(GHOST.values()[2], vet3.get(k));
+                        comb.put(GHOST.values()[3], vet4.get(z));
+
                         //System.out.println(comb);
-                        combination.add(comb);
+                        //System.out.println(comb);
+                        combination.add(comb.clone());
+                        //System.out.println(combination);
                         comb.clear();
+                        //System.out.println(combination);
                     }
                 }
             }
         }
+
+        //combination.forEach(System.out::println);
+        //System.out.println("combinazioni restituite: " + combination);
         return combination;
     }
 }
