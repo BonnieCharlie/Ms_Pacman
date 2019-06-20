@@ -80,11 +80,7 @@ public class MyMsPacMan extends Controller<MOVE> {
                 }
                 movesGhosts.add(moves);
             }
-            ArrayList<ArrayList<MOVE>>  combinations = new ArrayList<ArrayList<MOVE>>();
-            ArrayList<MOVE> vet1 = new ArrayList<MOVE>();
-            ArrayList<MOVE> vet2 = new ArrayList<MOVE>();
-            ArrayList<MOVE> vet3 = new ArrayList<MOVE>();
-            ArrayList<MOVE> vet4 = new ArrayList<MOVE>();
+            ArrayList<ArrayList<MOVE>>  combinations;
 
             for(int i = 0; i< movesGhosts.size(); i++){
 
