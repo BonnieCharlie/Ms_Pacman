@@ -15,7 +15,7 @@ import static pacman.game.Constants.DELAY;
 public class main {
     public static void main(String args[]) {
 
-        int numTrials = 10;
+        int numTrials = 1;
         myRunExperiment(new MyMsPacMan(), new RandomGhosts(), numTrials);
 
     }

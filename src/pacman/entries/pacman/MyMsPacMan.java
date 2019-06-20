@@ -33,8 +33,8 @@ public class MyMsPacMan extends Controller<MOVE> {
                 myMove = move;
             }
         }
-        System.out.println("Moves: " + myMove + "\tUtility: " + utility);
-        System.out.println("Time Execution: " + (System.currentTimeMillis() - start));
+        //System.out.println("Moves: " + myMove + "\tUtility: " + utility);
+        //System.out.println("Time Execution: " + (System.currentTimeMillis() - start));
         return myMove;
     }
 
@@ -43,8 +43,8 @@ public class MyMsPacMan extends Controller<MOVE> {
 
         // if this node is a final state, it returns the utility
         if (game.gameOver() || (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills()) == 0 || depth == absolute_depth) {
-            float eval = (float) Utils.InfluenceFunction(game);
-            //float eval = (float) Utils.EvaluationFunction(game);
+            //float eval = (float) Utils.InfluenceFunction(game);
+            float eval = (float) Utils.EvaluationFunction(game);
             //System.out.println("EVAL  "+eval);
             return eval;
         }
@@ -81,15 +81,16 @@ public class MyMsPacMan extends Controller<MOVE> {
                 movesGhosts.add(moves);
             }
             ArrayList<ArrayList<MOVE>>  combinations;
-
+            /*
             for(int i = 0; i< movesGhosts.size(); i++){
 
                 if(movesGhosts.get(i).size()==0){
                     movesGhosts.get(i).add(MOVE.NEUTRAL);
                 }
-            }
+            }*/
             //System.out.println(movesGhosts.get(0) +", "+ movesGhosts.get(1)+", "+ movesGhosts.get(2)+", "+ movesGhosts.get(3));
             combinations = combination_between_two_vectors(movesGhosts.get(0), movesGhosts.get(1), movesGhosts.get(2), movesGhosts.get(3));
+            //System.out.println("tempo combinations: " + (System.currentTimeMillis()-start) + "    num_combinations: " + combinations.size() + "  =   " + movesGhosts.get(0).size()* movesGhosts.get(1).size()* movesGhosts.get(2).size()* movesGhosts.get(3).size());
 
             for(int i = 0; i<combinations.size(); i++){
                 Game g = game.copy();
@@ -100,7 +101,13 @@ public class MyMsPacMan extends Controller<MOVE> {
                     }
                 }
                 g.updateGhosts(map);
+                long start = System.currentTimeMillis();
                 sum += expectiminimax(g, depth, nextAgentType) * (1 / (float) (combinations.size()));
+                long tempo_sum = System.currentTimeMillis()-start;
+                if(tempo_sum > 40){
+                    System.out.println("AIUTOOOO");
+                    System.out.println("tempo sum: " + tempo_sum + ",    " + movesGhosts.get(0).size()* movesGhosts.get(1).size()* movesGhosts.get(2).size()* movesGhosts.get(3).size());
+                }
             }
             return sum;
         }
