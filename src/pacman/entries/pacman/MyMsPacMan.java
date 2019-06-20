@@ -13,7 +13,7 @@ import java.util.EnumMap;
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove = MOVE.NEUTRAL;
-    private int absolute_depth = 5;
+    private int absolute_depth = 4;
 
     public MOVE getMove(Game game, long timeDue) {
         //Place your game logic here to play the game as Ms Pac-Man
@@ -26,7 +26,7 @@ public class MyMsPacMan extends Controller<MOVE> {
         for (MOVE move : possibleMoves) {
             Game g = game.copy();
             g.updatePacMan(move);
-            utility = expectiminimax(g, 0, 1, 3);
+            utility = expectiminimax(g, 0, 1);
 
             if (utility > maximum) {
                 maximum = utility;
@@ -34,12 +34,12 @@ public class MyMsPacMan extends Controller<MOVE> {
             }
         }
         System.out.println("Moves: " + myMove + "\tUtility: " + utility);
-        System.out.println("Time Execution: " + (System.currentTimeMillis()-start));
+        System.out.println("Time Execution: " + (System.currentTimeMillis() - start));
         return myMove;
     }
 
 
-    private float expectiminimax(Game game, int depth, int agentType, int num_agents) {
+    private float expectiminimax(Game game, int depth, int agentType) {
 
         // if this node is a final state, it returns the utility
         if (game.gameOver() || (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills()) == 0 || depth == absolute_depth) {
@@ -57,7 +57,7 @@ public class MyMsPacMan extends Controller<MOVE> {
             for (MOVE move : possibleMoves) { //for (MOVE move: possibleMoves)
                 Game g = game.copy();
                 g.updatePacMan(move);
-                float value = expectiminimax(g, depth, 1, num_agents);
+                float value = expectiminimax(g, depth, 1);
                 if (value > max) {
                     max = value;
                 }
@@ -68,30 +68,65 @@ public class MyMsPacMan extends Controller<MOVE> {
         // if agentType is a MIN node with possibility
         else {
             int nextAgentType = agentType + 1;
-            if (num_agents == nextAgentType)
-                nextAgentType = 0;
-            if (nextAgentType == 0)
-                depth += 1;
+            depth += 1;
 
-            float sum = 0;
-            MOVE[] possibleMoves = game.getPossibleMoves(game.getGhostCurrentNodeIndex(GHOST.values()[agentType - 1]));
-            //System.out.println(possibleMoves.length);
-            if(possibleMoves.length==0){
-                possibleMoves= new MOVE[]{MOVE.UP};
+            float sum=0;
+            ArrayList<ArrayList<MOVE>> movesGhosts = new ArrayList<ArrayList<MOVE>>();
+            for(GHOST ghostType : GHOST.values()){
+                MOVE[] possibleMoves = game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghostType));
+                ArrayList<MOVE> moves = new ArrayList<MOVE>();
+                for(MOVE move: possibleMoves){
+                    moves.add(move);
+                }
+                movesGhosts.add(moves);
             }
-            for (MOVE move : possibleMoves) {
+            ArrayList<ArrayList<MOVE>>  combinations = new ArrayList<ArrayList<MOVE>>();
+            ArrayList<MOVE> vet1 = new ArrayList<MOVE>();
+            ArrayList<MOVE> vet2 = new ArrayList<MOVE>();
+            ArrayList<MOVE> vet3 = new ArrayList<MOVE>();
+            ArrayList<MOVE> vet4 = new ArrayList<MOVE>();
+
+            for(int i = 0; i< movesGhosts.size(); i++){
+
+                if(movesGhosts.get(i).size()==0){
+                    movesGhosts.get(i).add(MOVE.NEUTRAL);
+                }
+            }
+
+            combinations = combination_between_two_vectors(movesGhosts.get(0), movesGhosts.get(1), movesGhosts.get(2), movesGhosts.get(3));
+
+            for(int i = 0; i<combinations.size(); i++){
                 Game g = game.copy();
                 EnumMap<GHOST, MOVE> map = new EnumMap<GHOST, MOVE>(GHOST.class);
-                for (GHOST ghostType : GHOST.values()) {
-                    if (ghostType == GHOST.values()[agentType - 1])
+                for(MOVE move: combinations.get(i)){
+                    for (GHOST ghostType : GHOST.values()) {
                         map.put(ghostType, move);
-                    else
-                        map.put(ghostType, g.getGhostLastMoveMade(ghostType));
+                    }
                 }
                 g.updateGhosts(map);
-                sum += expectiminimax(g, depth, nextAgentType, num_agents) * (1 / (float) possibleMoves.length);
+                sum += expectiminimax(g, depth, nextAgentType) * (1 / (float) (combinations.size()));
             }
             return sum;
         }
+    }
+
+    private ArrayList<ArrayList<MOVE>> combination_between_two_vectors(ArrayList<MOVE> vet1, ArrayList<MOVE> vet2, ArrayList<MOVE> vet3, ArrayList<MOVE> vet4){
+        ArrayList<ArrayList<MOVE>> combination = new ArrayList<ArrayList<MOVE>>();
+        for(int i=0; i<vet1.size(); i++){
+            ArrayList<MOVE> comb = new ArrayList<MOVE>();
+            for(int j=0; j<vet2.size(); j++){
+                for(int k=0; j<vet3.size(); j++){
+                    for(int z=0; j<vet4.size(); j++){
+                        comb.add(vet1.get(i));
+                        comb.add(vet1.get(j));
+                        comb.add(vet1.get(k));
+                        comb.add(vet1.get(z));
+                        combination.add(comb);
+                        comb.clear();
+                    }
+                }
+            }
+        }
+        return combination;
     }
 }
