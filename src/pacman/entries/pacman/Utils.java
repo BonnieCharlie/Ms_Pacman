@@ -2,11 +2,14 @@ package pacman.entries.pacman;
 
 import pacman.game.Constants;
 import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
+import pacman.game.Constants.DM;
 import pacman.game.Game;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -161,5 +164,23 @@ public class Utils {
         //influence = pill_influence + powerPill_influence - unedibleGhost_influence + edibleGhost_influence
         //System.out.println("Influence: " + influence + ", " + pill_influence +", " + unedibleGhost_influence+", "+  edibleGhost_influence );
         return influence;
+    }
+
+
+    public static void legacyMin(Game g){
+        EnumMap<GHOST, MOVE> ghostMove= new EnumMap<GHOST, MOVE>(GHOST.class);
+        int count = 0;
+        for(GHOST ghostType : GHOST.values()) {
+            if (ghostType == GHOST.SUE){
+
+            }else{
+                int posGhost = g.getGhostCurrentNodeIndex(ghostType);
+                int posPacMan = g.getPacmanCurrentNodeIndex();
+                int node = (int) g.getDistance(posGhost, posPacMan, DM.values()[count]);
+                MOVE move = g.getMoveToMakeToReachDirectNeighbour(posGhost, node);
+                ghostMove.put(ghostType, move);
+                count ++;
+            }
+        }
     }
 }

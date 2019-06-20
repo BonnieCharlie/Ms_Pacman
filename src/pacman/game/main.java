@@ -2,8 +2,7 @@ package pacman.game;
 
 import pacman.Executor;
 import pacman.controllers.Controller;
-import pacman.controllers.examples.RandomGhosts;
-import pacman.controllers.examples.RandomPacMan;
+import pacman.controllers.examples.*;
 import pacman.entries.pacman.MyMsPacMan;
 
 import java.util.ArrayList;
@@ -15,7 +14,16 @@ import static pacman.game.Constants.DELAY;
 public class main {
     public static void main(String args[]) {
 
-        int numTrials = 1;
+        int numTrials = 50;
+        //myRunExperiment(new RandomPacMan(), new RandomGhosts(), numTrials);
+        //myRunExperiment(new RandomPacMan(), new AggressiveGhosts(), numTrials);
+        //myRunExperiment(new RandomPacMan(), new Legacy(), numTrials);
+        //myRunExperiment(new RandomNonRevPacMan(), new RandomGhosts(), numTrials);
+        //myRunExperiment(new RandomNonRevPacMan(), new AggressiveGhosts(), numTrials);
+        //myRunExperiment(new RandomNonRevPacMan(), new Legacy(), numTrials);
+        //myRunExperiment(new NearestPillPacMan(), new RandomGhosts(), numTrials);
+        //myRunExperiment(new NearestPillPacMan(), new AggressiveGhosts(), numTrials);
+        //myRunExperiment(new NearestPillPacMan(), new Legacy(), numTrials);
         myRunExperiment(new MyMsPacMan(), new RandomGhosts(), numTrials);
 
     }
@@ -32,6 +40,7 @@ public class main {
      */
     public static void myRunExperiment(Controller<Constants.MOVE> pacManController, Controller<EnumMap<Constants.GHOST, Constants.MOVE>> ghostController, int trials) {
         double avgScore = 0;
+        double score = 0;
         double maxScore = 0;
         double minScore = 100000;
 
@@ -45,13 +54,13 @@ public class main {
                 game.advanceGame(pacManController.getMove(game.copy(), System.currentTimeMillis() + DELAY),
                         ghostController.getMove(game.copy(), System.currentTimeMillis() + DELAY));
             }
-
-            avgScore += game.getScore();
-            if (avgScore>maxScore){
-                maxScore = avgScore;
+            score = game.getScore();
+            avgScore += score;
+            if (score > maxScore) {
+                maxScore = score;
             }
-            if (avgScore < minScore){
-                minScore = avgScore;
+            if (score < minScore) {
+                minScore = score;
             }
             System.out.println(i + "\t" + game.getScore());
         }

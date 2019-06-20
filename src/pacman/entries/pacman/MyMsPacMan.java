@@ -15,7 +15,7 @@ public class MyMsPacMan extends Controller<MOVE> {
 
     public MOVE getMove(Game game, long timeDue) {
         //Place your game logic here to play the game as Ms Pac-Man
-        Long start1 = System.currentTimeMillis();
+        //Long start1 = System.currentTimeMillis();
         float maximum = -1000;
         float utility = maximum;
 
@@ -32,7 +32,7 @@ public class MyMsPacMan extends Controller<MOVE> {
             }
         }
         //System.out.println("Moves: " + myMove + "\tUtility: " + utility);
-        System.out.println("Time Execution: " + (System.currentTimeMillis() - start1));
+        //System.out.println("Time Execution: " + (System.currentTimeMillis() - start1));
         return myMove;
     }
 
