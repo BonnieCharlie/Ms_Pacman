@@ -19,7 +19,7 @@ public class ExpectiminimaxPacMan extends Controller<MOVE> {
     {
         //Place your game logic here to play the game as Ms Pac-Man
 
-        myMove = expectiminimaxResearch(game, depth);
+        myMove = expectiminimaxSearch(game, depth);
         return myMove;
     }
 
@@ -27,7 +27,7 @@ public class ExpectiminimaxPacMan extends Controller<MOVE> {
     /*
     * Expectiminimax algorithm based on alfa-beta pruning structure
     */
-    private MOVE expectiminimaxResearch(Game game, int depth){
+    private MOVE expectiminimaxSearch(Game game, int depth){
         double v = maxValue(game, depth);
         MOVE move = pacmanNextState.get(v);
         System.out.println(move);
@@ -53,12 +53,8 @@ public class ExpectiminimaxPacMan extends Controller<MOVE> {
             // Pacman possible next state
             MOVE[] movePacman = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
             for(int i=0; i<movePacman.length; i++){
-                pacmanNextState.put((double)i, movePacman[i]);
-            }
-            System.out.println(pacmanNextState);
-            for (HashMap.Entry<Double, MOVE> entry : pacmanNextState.entrySet()){
                 g = game.copy();
-                MOVE move = entry.getValue(); // it is possible to exstract this value only ones
+                MOVE move = movePacman[i]; // it is possible to exstract this value only ones
                 g.updatePacMan(move);
                 System.out.println("Chiamo ricorsione: "+ String.valueOf(depth+1));
                 double max = minValue(g, depth);
@@ -67,6 +63,7 @@ public class ExpectiminimaxPacMan extends Controller<MOVE> {
                     v = max;
                 }
             }
+            System.out.println(pacmanNextState);
             return v;
         }
     }
