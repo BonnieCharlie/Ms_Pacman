@@ -7,31 +7,34 @@ import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove = MOVE.NEUTRAL;
-    private int absolute_depth = 3;
+    private int absolute_depth = 5;
 
     public MOVE getMove(Game game, long timeDue) {
         //Place your game logic here to play the game as Ms Pac-Man
-
+        Long start = System.currentTimeMillis();
         float maximum = -1000;
         float utility = maximum;
 
-        MOVE[] possibleMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex(), game.getPacmanLastMoveMade());
+        MOVE[] possibleMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
+        Arrays.stream(possibleMoves).forEach(v -> System.out.println(v));
         for (MOVE move : possibleMoves) {
             Game g = game.copy();
             g.updatePacMan(move);
             utility = expectiminimax(g, 0, 1, 3);
-            System.out.println("Moves: " + move + "\tUtility: " + utility);
+
             if (utility > maximum) {
                 maximum = utility;
                 myMove = move;
             }
         }
-
+        System.out.println("Moves: " + myMove + "\tUtility: " + utility);
+        System.out.println("Time Execution: " + (System.currentTimeMillis()-start));
         return myMove;
     }
 
@@ -40,7 +43,8 @@ public class MyMsPacMan extends Controller<MOVE> {
 
         // if this node is a final state, it returns the utility
         if (game.gameOver() || (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills()) == 0 || depth == absolute_depth) {
-            float eval = (float) Utils.InfluenceFunction(game);
+            //float eval = (float) Utils.InfluenceFunction(game);
+            float eval = (float) Utils.EvaluationFunction(game);
             //System.out.println("EVAL  "+eval);
             return eval;
         }

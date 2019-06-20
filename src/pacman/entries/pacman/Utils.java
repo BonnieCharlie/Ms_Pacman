@@ -64,7 +64,7 @@ public class Utils {
     public static double InfluenceFunction(Game game){
         float influence = 0;
         float p_dots = 1;
-        float p_run = 1/(float)4;
+        float p_run = 1;
         float p_chase = 20;
         int n_d = game.getNumberOfActivePills()+game.getNumberOfActivePowerPills(); // number of uneated pills
         int n_totalPills = game.getNumberOfPills()+game.getNumberOfPowerPills();
@@ -86,7 +86,7 @@ public class Utils {
         }
 
 
-        p_dots = p_dots/n_totalPills;
+        //p_dots = p_dots/n_totalPills;
 
         float pill_influence = 0;
         float unedibleGhost_influence = 0;
@@ -123,8 +123,8 @@ public class Utils {
             edibleGhost_influence += p_chase / game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
         }
 
-        influence = pill_influence  -unedibleGhost_influence + edibleGhost_influence;
-        System.out.println("Influence: " + influence + ", " + pill_influence +", " + unedibleGhost_influence+", "+  edibleGhost_influence );
+        influence = pill_influence  - unedibleGhost_influence + edibleGhost_influence;
+        //System.out.println("Influence: " + influence + ", " + pill_influence +", " + unedibleGhost_influence+", "+  edibleGhost_influence );
         return influence;
     }
 }
