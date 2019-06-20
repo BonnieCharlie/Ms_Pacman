@@ -13,7 +13,7 @@ import java.util.EnumMap;
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove = MOVE.NEUTRAL;
-    private int absolute_depth = 4;
+    private int absolute_depth = 6;
 
     public MOVE getMove(Game game, long timeDue) {
         //Place your game logic here to play the game as Ms Pac-Man
@@ -43,8 +43,8 @@ public class MyMsPacMan extends Controller<MOVE> {
 
         // if this node is a final state, it returns the utility
         if (game.gameOver() || (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills()) == 0 || depth == absolute_depth) {
-            //float eval = (float) Utils.InfluenceFunction(game);
-            float eval = (float) Utils.EvaluationFunction(game);
+            float eval = (float) Utils.InfluenceFunction(game);
+            //float eval = (float) Utils.EvaluationFunction(game);
             //System.out.println("EVAL  "+eval);
             return eval;
         }

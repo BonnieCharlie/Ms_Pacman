@@ -63,9 +63,9 @@ public class Utils {
 
     public static double InfluenceFunction(Game game){
         float influence = 0;
-        float p_dots = 1;
+        float p_dots = 1/(float)10;
         float p_run = 1;
-        float p_chase = 20;
+        float p_chase = 30;
         int n_d = game.getNumberOfActivePills()+game.getNumberOfActivePowerPills(); // number of uneated pills
         int n_totalPills = game.getNumberOfPills()+game.getNumberOfPowerPills();
         int n_d_signed = n_totalPills - n_d; // number of eated pills
@@ -101,7 +101,7 @@ public class Utils {
         //System.out.println(targets.size());
 
         for(int k=0; k<n_d; k++){
-            double den = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
+            double den = game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
 
             if (den == 0) // correzione se +inf
                 den = 1;
@@ -115,12 +115,13 @@ public class Utils {
 
         for(int k=0; k<n_r; k++) {
             //System.out.println(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]));
-            unedibleGhost_influence += p_run * n_d / game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
+            //unedibleGhost_influence += p_run * n_d / game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
+            unedibleGhost_influence += p_run * n_d / game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
         }
 
         for(int k=0; k<n_c; k++) {
             //System.out.println(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]));
-            edibleGhost_influence += p_chase / game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
+            edibleGhost_influence += p_chase / game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
         }
 
         influence = pill_influence  - unedibleGhost_influence + edibleGhost_influence;
