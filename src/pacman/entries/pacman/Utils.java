@@ -62,13 +62,21 @@ public class Utils {
     }
 
     public static double InfluenceFunction(Game game){
-        float influence = 0;
+        float influence = 0; // UTILITY
+
+        // Optimize Parameters
         float p_dots = 1/(float)10;
         float p_run = 1;
         float p_chase = 30;
-        int n_d = game.getNumberOfActivePills()+game.getNumberOfActivePowerPills(); // number of uneated pills
-        int n_totalPills = game.getNumberOfPills()+game.getNumberOfPowerPills();
+        float p_powerDots =1;
+
+        // Sum Indices
+        int n_d = game.getNumberOfActivePills();// number of uneated pills
+        int n_pd = game.getNumberOfActivePowerPills(); // number of uneaten powerpills;
+        int n_totalPowerPills = game.getNumberOfPowerPills(); //Total number of PowerPills;
+        int n_totalPills = game.getNumberOfPills(); // Total number of pills;
         int n_d_signed = n_totalPills - n_d; // number of eated pills
+        int n_pd_signed = n_totalPowerPills-n_pd; //number of eated power pills
 
         int n_r = 0; // number of unedible ghosts
         int n_c = 0; // number of edible ghosts
@@ -85,46 +93,72 @@ public class Utils {
             }
         }
 
-
-        //p_dots = p_dots/n_totalPills;
-
+        //p_dots = (p_dots+n_d_signed)/n_totalPills;
         float pill_influence = 0;
+        float powerPill_influence = 0;
         float unedibleGhost_influence = 0;
         float edibleGhost_influence = 0;
 
         int[] pillIndices = game.getPillIndices();
         int[] powerPillIndices = game.getPowerPillIndices();
 
-        ArrayList<Integer> targets=new ArrayList<Integer>(Arrays.stream(pillIndices).boxed().collect(Collectors.toList()));
-        targets.addAll(Arrays.stream(powerPillIndices).boxed().collect(Collectors.toList()));
+        //ArrayList<Integer> targets=new ArrayList<Integer>(Arrays.stream(pillIndices).boxed().collect(Collectors.toList()));
+        //targets.addAll(Arrays.stream(powerPillIndices).boxed().collect(Collectors.toList()));
 
         //System.out.println(targets.size());
+        int posPACMAN = game.getPacmanCurrentNodeIndex(); //Pacman Position
 
-        for(int k=0; k<n_d; k++){
-            double den = game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
+        //PILLS INFLUENCE
+        for(int k = 0; k<n_d/2; k++){
+            double den = game.getShortestPathDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.PATH));
+            //double den = game.getManhattanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.MANHATTAN));
+            //double den = game.getEuclideanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.EUCLID));
+            if (den == 0) // correzione se +inf
+                den = 1;
+            pill_influence += (float)p_dots*n_d_signed/den;
+        }
+        //POWERPILLS INFLUENCE
+        for(int k=0; k<n_pd; k++){
+            double den = game.getShortestPathDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, powerPillIndices, Constants.DM.PATH));
+            //double den = game.getManhattanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.MANHATTAN));
+            //double den = game.getEuclideanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.EUCLID));
+            if (den == 0) // correzione se +inf
+                den = 1;
+            powerPill_influence += (float)p_powerDots*n_pd_signed/den;
+        }
+
+        //Pill influence total
+/*        for(int k=0; k<n_d; k++){
+            //double den = game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
+            double den = game.getShortestPathDistance(posPACMAN, pillIndices[k]);
+            //double den = game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
 
             if (den == 0) // correzione se +inf
                 den = 1;
 
-
             pill_influence += (float)p_dots*n_d_signed/den;
             //System.out.println("pill_influence " + k + ": " + pill_influence);
-        }
+        }*/
+
+
         //System.out.println("pill_influence totale" + pill_influence);
 
-
+        //UNEDIBLE GHOST INFLUENCE
         for(int k=0; k<n_r; k++) {
-            //System.out.println(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]));
             //unedibleGhost_influence += p_run * n_d / game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
-            unedibleGhost_influence += p_run * n_d / game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
-        }
+            unedibleGhost_influence += p_run * n_d / game.getEuclideanDistance(posPACMAN, ghostUnedibleIndices[k]);
+            //unedibleGhost_influence += p_run * n_d / game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
 
+        }
+        //EDIBLE GHOST INFLUENCE
         for(int k=0; k<n_c; k++) {
-            //System.out.println(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]));
-            edibleGhost_influence += p_chase / game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
+            //edibleGhost_influence += p_chase / game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
+            edibleGhost_influence += p_chase / game.getShortestPathDistance(posPACMAN, ghostEdibleIndices[k]);
+            //edibleGhost_influence += p_chase / game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
         }
 
         influence = pill_influence  - unedibleGhost_influence + edibleGhost_influence;
+        //influence = pill_influence + powerPill_influence - unedibleGhost_influence + edibleGhost_influence
         //System.out.println("Influence: " + influence + ", " + pill_influence +", " + unedibleGhost_influence+", "+  edibleGhost_influence );
         return influence;
     }
