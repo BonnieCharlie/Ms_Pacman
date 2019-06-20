@@ -1,14 +1,61 @@
 package pacman.game;
 
+import pacman.Executor;
+import pacman.controllers.Controller;
+import pacman.controllers.examples.RandomGhosts;
+import pacman.controllers.examples.RandomPacMan;
+import pacman.entries.pacman.MyMsPacMan;
+
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Random;
+
+import static pacman.game.Constants.DELAY;
 
 public class main {
-    public static void main(String args[]){
-        ArrayList<Integer[]> movesGhosts = new ArrayList<Integer[]>();
-        for(int i=0; i<5; i++){
-            Integer[] ghosts = {1,2,3,4};
-            movesGhosts.add(ghosts);
+    public static void main(String args[]) {
+
+        int numTrials = 10;
+        myRunExperiment(new MyMsPacMan(), new RandomGhosts(), numTrials);
+
+    }
+
+    /**
+     * For running multiple games without visuals. This is useful to get a good idea of how well a controller plays
+     * against a chosen opponent: the random nature of the game means that performance can vary from game to game.
+     * Running many games and looking at the average score (and standard deviation/error) helps to get a better
+     * idea of how well the controller is likely to do in the competition.
+     *
+     * @param pacManController The Pac-Man controller
+     * @param ghostController  The Ghosts controller
+     * @param trials           The number of trials to be executed
+     */
+    public static void myRunExperiment(Controller<Constants.MOVE> pacManController, Controller<EnumMap<Constants.GHOST, Constants.MOVE>> ghostController, int trials) {
+        double avgScore = 0;
+        double maxScore = 0;
+        double minScore = 100000;
+
+        Random rnd = new Random(0);
+        Game game;
+
+        for (int i = 0; i < trials; i++) {
+            game = new Game(rnd.nextLong());
+
+            while (!game.gameOver()) {
+                game.advanceGame(pacManController.getMove(game.copy(), System.currentTimeMillis() + DELAY),
+                        ghostController.getMove(game.copy(), System.currentTimeMillis() + DELAY));
+            }
+
+            avgScore += game.getScore();
+            if (avgScore>maxScore){
+                maxScore = avgScore;
+            }
+            if (avgScore < minScore){
+                minScore = avgScore;
+            }
+            System.out.println(i + "\t" + game.getScore());
         }
-        System.out.println(movesGhosts.size());
+
+        System.out.println("AvgScore: " + avgScore / trials + "\t" + "MaxScore: " + maxScore + "\t" + "MinScore: " + minScore);
     }
 }

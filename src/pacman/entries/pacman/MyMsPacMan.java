@@ -13,7 +13,7 @@ import java.util.EnumMap;
 public class MyMsPacMan extends Controller<MOVE> {
 
     private MOVE myMove = MOVE.NEUTRAL;
-    private int absolute_depth = 6;
+    private int absolute_depth = 4;
 
     public MOVE getMove(Game game, long timeDue) {
         //Place your game logic here to play the game as Ms Pac-Man
@@ -22,7 +22,7 @@ public class MyMsPacMan extends Controller<MOVE> {
         float utility = maximum;
 
         MOVE[] possibleMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
-        Arrays.stream(possibleMoves).forEach(v -> System.out.println(v));
+        //Arrays.stream(possibleMoves).forEach(v -> System.out.println(v));
         for (MOVE move : possibleMoves) {
             Game g = game.copy();
             g.updatePacMan(move);
@@ -88,7 +88,7 @@ public class MyMsPacMan extends Controller<MOVE> {
                     movesGhosts.get(i).add(MOVE.NEUTRAL);
                 }
             }
-
+            //System.out.println(movesGhosts.get(0) +", "+ movesGhosts.get(1)+", "+ movesGhosts.get(2)+", "+ movesGhosts.get(3));
             combinations = combination_between_two_vectors(movesGhosts.get(0), movesGhosts.get(1), movesGhosts.get(2), movesGhosts.get(3));
 
             for(int i = 0; i<combinations.size(); i++){
@@ -111,12 +111,13 @@ public class MyMsPacMan extends Controller<MOVE> {
         for(int i=0; i<vet1.size(); i++){
             ArrayList<MOVE> comb = new ArrayList<MOVE>();
             for(int j=0; j<vet2.size(); j++){
-                for(int k=0; j<vet3.size(); j++){
-                    for(int z=0; j<vet4.size(); j++){
+                for(int k=0; k<vet3.size(); k++){
+                    for(int z=0; z<vet4.size(); z++){
                         comb.add(vet1.get(i));
-                        comb.add(vet1.get(j));
-                        comb.add(vet1.get(k));
-                        comb.add(vet1.get(z));
+                        comb.add(vet2.get(j));
+                        comb.add(vet3.get(k));
+                        comb.add(vet4.get(z));
+                        //System.out.println(comb);
                         combination.add(comb);
                         comb.clear();
                     }
