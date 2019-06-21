@@ -9,6 +9,7 @@ import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.internal.Ghost;
 
+import java.sql.Array;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,11 +65,11 @@ public class MyPacMan extends Controller<MOVE>
 		Game gameMIN = null;
 		float average = 0;
 
-		ArrayList<MOVE[]> allLegalMoves = new ArrayList<MOVE[]>();
+		/*ArrayList<MOVE[]> allLegalMoves = new ArrayList<MOVE[]>();
 		for (GHOST ghost: GHOST.values()){
 			allLegalMoves.add(game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost)));
 		}
-
+		*/
 /*		int index = 0;
 		for (MOVE[] moves : allLegalMoves) {
 			if (moves.length == 0){
@@ -78,17 +79,31 @@ public class MyPacMan extends Controller<MOVE>
 			index++;
 		}*/
 
-		ArrayList<EnumMap<GHOST,MOVE>> combination = getCombination(allLegalMoves);
+		//ArrayList<EnumMap<GHOST,MOVE>> combination = getCombination(allLegalMoves);
 		//System.out.println(combination.size());
 		/*
 		if (combination.size()==0){
 			return expectMinMax(g, 0, 0, numberRecursive);
 		}
-		*/
+
 		for(EnumMap<GHOST,MOVE> ghostState : combination){
 			gameMIN  = game.copy();
 			gameMIN.updateGhosts(ghostState);
 			average+= getMax(gameMIN, depth)/combination.size();
+		}
+		*/
+
+		EnumMap<GHOST,MOVE> mappa = new EnumMap<GHOST, MOVE>(GHOST.class);
+		MOVE[] possibleMOves = game.getPossibleMoves(game.getGhostCurrentNodeIndex(GHOST.BLINKY));
+		for(MOVE mossa : possibleMOves){
+			mappa.put(GHOST.BLINKY, mossa);
+			mappa.put(GHOST.SUE, MOVE.NEUTRAL);
+			mappa.put(GHOST.PINKY, MOVE.NEUTRAL);
+			mappa.put(GHOST.INKY, MOVE.NEUTRAL);
+
+			gameMIN  = game.copy();
+			gameMIN.updateGhosts(mappa);
+			average+= getMax(gameMIN, depth)/possibleMOves.length;
 		}
 
 		return average;
