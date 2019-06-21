@@ -3,6 +3,7 @@ package pacman.game;
 import pacman.Executor;
 import pacman.controllers.Controller;
 import pacman.controllers.examples.*;
+import pacman.entries.pacman.LegacyPacMan;
 import pacman.entries.pacman.MyMsPacMan;
 
 import java.util.ArrayList;
@@ -24,7 +25,8 @@ public class main {
         //myRunExperiment(new NearestPillPacMan(), new RandomGhosts(), numTrials);
         //myRunExperiment(new NearestPillPacMan(), new AggressiveGhosts(), numTrials);
         //myRunExperiment(new NearestPillPacMan(), new Legacy(), numTrials);
-        myRunExperiment(new MyMsPacMan(), new RandomGhosts(), numTrials);
+        //myRunExperiment(new LegacyPacMan(), new Legacy(), numTrials);
+        myRunExperiment(new LegacyPacMan(), new Legacy(), numTrials);
 
     }
 

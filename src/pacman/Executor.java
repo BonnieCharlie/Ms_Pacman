@@ -23,6 +23,7 @@ import pacman.controllers.examples.RandomPacMan;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
 import pacman.entries.pacman.ExpectiminimaxPacMan;
+import pacman.entries.pacman.LegacyPacMan;
 import pacman.entries.pacman.MyMsPacMan;
 import pacman.entries.pacman.MyPacMan;
 import pacman.game.Game;
@@ -69,7 +70,7 @@ public class Executor
 //		exec.runGameTimed(new HumanController(new KeyBoardInput()), new Legacy(),visual);
 //		exec.runGameTimed(new MyMsPacMan(), new AggressiveGhosts(),visual);
 		//exec.runGameTimed(new ExpectiminimaxPacMan(), new RandomGhosts(),visual);
-		exec.runGameTimed(new MyPacMan(), new RandomGhosts(),visual);
+		exec.runGameTimed(new LegacyPacMan(), new Legacy(), visual);
 
 
 		//*/

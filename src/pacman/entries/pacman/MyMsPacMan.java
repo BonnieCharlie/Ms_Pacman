@@ -41,8 +41,8 @@ public class MyMsPacMan extends Controller<MOVE> {
 
         // if this node is a final state, it returns the utility
         if (game.gameOver() || (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills()) == 0 || depth == absolute_depth) {
-            //float eval = (float) Utils.InfluenceFunction(game);
-            float eval = (float) Utils.EvaluationFunction(game);
+            float eval = (float) Utils.InfluenceFunction(game);
+            //float eval = (float) Utils.EvaluationFunction(game);
             //System.out.println("EVAL  "+eval);
             return eval;
         }

@@ -10,15 +10,16 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Utils {
 
-    public static double EvaluationFunction(Game game){
+    public static double EvaluationFunction(Game game) {
 
-        if(game.getNumberOfActivePills()+game.getNumberOfActivePowerPills() == 0){
+        if (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             return Double.POSITIVE_INFINITY;
-        }else if(game.gameOver() || game.wasPacManEaten()){
+        } else if (game.gameOver() || game.wasPacManEaten()) {
             return Double.NEGATIVE_INFINITY;
         }
 
@@ -29,12 +30,12 @@ public class Utils {
         float oldDistance = distance;
         Constants.GHOST nearestghost;
         nearestghost = null;
-        for (Constants.GHOST ghost: Constants.GHOST.values()) {
-            if(game.getGhostLairTime(ghost)==0){
+        for (Constants.GHOST ghost : Constants.GHOST.values()) {
+            if (game.getGhostLairTime(ghost) == 0) {
                 distance = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
                 //distance = game.getManhattanDistance(posPacman,game.getGhostCurrentNodeIndex(ghost));
                 //distance = (float) game.getEuclideanDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
-                if(distance < oldDistance){
+                if (distance < oldDistance) {
                     oldDistance = distance;
                     nearestghost = ghost;
                 }
@@ -64,14 +65,14 @@ public class Utils {
         return oldDistance;
     }
 
-    public static double InfluenceFunction(Game game){
+    public static double InfluenceFunction(Game game) {
         float influence = 0; // UTILITY
 
         // Optimize Parameters
-        float p_dots = 1/(float)10;
+        float p_dots = 1 / (float) 10;
         float p_run = 1;
         float p_chase = 30;
-        float p_powerDots =1;
+        float p_powerDots = 1;
 
         // Sum Indices
         int n_d = game.getNumberOfActivePills();// number of uneated pills
@@ -79,18 +80,18 @@ public class Utils {
         int n_totalPowerPills = game.getNumberOfPowerPills(); //Total number of PowerPills;
         int n_totalPills = game.getNumberOfPills(); // Total number of pills;
         int n_d_signed = n_totalPills - n_d; // number of eated pills
-        int n_pd_signed = n_totalPowerPills-n_pd; //number of eated power pills
+        int n_pd_signed = n_totalPowerPills - n_pd; //number of eated power pills
 
         int n_r = 0; // number of unedible ghosts
         int n_c = 0; // number of edible ghosts
 
         int[] ghostUnedibleIndices = new int[4];
         int[] ghostEdibleIndices = new int[4];
-        for (GHOST ghostType: GHOST.values()){
-            if (!game.isGhostEdible(ghostType) && game.getGhostLairTime(ghostType)==0) { //
+        for (GHOST ghostType : GHOST.values()) {
+            if (!game.isGhostEdible(ghostType) && game.getGhostLairTime(ghostType) == 0) { //
                 ghostUnedibleIndices[n_r] = game.getGhostCurrentNodeIndex(ghostType);
                 n_r++;
-            }else if(game.isGhostEdible(ghostType)){
+            } else if (game.isGhostEdible(ghostType)) {
                 ghostEdibleIndices[n_c] = game.getGhostCurrentNodeIndex(ghostType);
                 n_c++;
             }
@@ -112,22 +113,22 @@ public class Utils {
         int posPACMAN = game.getPacmanCurrentNodeIndex(); //Pacman Position
 
         //PILLS INFLUENCE
-        for(int k = 0; k<n_d/2; k++){
+        for (int k = 0; k < (n_d / 4); k++) {
             double den = game.getShortestPathDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.PATH));
             //double den = game.getManhattanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.MANHATTAN));
             //double den = game.getEuclideanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.EUCLID));
             if (den == 0) // correzione se +inf
                 den = 1;
-            pill_influence += (float)p_dots*n_d_signed/den;
+            pill_influence += (float) p_dots * n_d_signed / den;
         }
         //POWERPILLS INFLUENCE
-        for(int k=0; k<n_pd; k++){
+        for (int k = 0; k < n_pd; k++) {
             double den = game.getShortestPathDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, powerPillIndices, Constants.DM.PATH));
             //double den = game.getManhattanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.MANHATTAN));
             //double den = game.getEuclideanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.EUCLID));
             if (den == 0) // correzione se +inf
                 den = 1;
-            powerPill_influence += (float)p_powerDots*n_pd_signed/den;
+            powerPill_influence += (float) p_powerDots * n_pd_signed / den;
         }
 
         //Pill influence total
@@ -147,40 +148,101 @@ public class Utils {
         //System.out.println("pill_influence totale" + pill_influence);
 
         //UNEDIBLE GHOST INFLUENCE
-        for(int k=0; k<n_r; k++) {
+        for (int k = 0; k < n_r; k++) {
             //unedibleGhost_influence += p_run * n_d / game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
             unedibleGhost_influence += p_run * n_d / game.getEuclideanDistance(posPACMAN, ghostUnedibleIndices[k]);
             //unedibleGhost_influence += p_run * n_d / game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), ghostUnedibleIndices[k]);
 
         }
         //EDIBLE GHOST INFLUENCE
-        for(int k=0; k<n_c; k++) {
+        for (int k = 0; k < n_c; k++) {
             //edibleGhost_influence += p_chase / game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
             edibleGhost_influence += p_chase / game.getShortestPathDistance(posPACMAN, ghostEdibleIndices[k]);
             //edibleGhost_influence += p_chase / game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), ghostEdibleIndices[k]);
         }
 
-        influence = pill_influence  - unedibleGhost_influence + edibleGhost_influence;
+        influence = pill_influence - unedibleGhost_influence + edibleGhost_influence;
         //influence = pill_influence + powerPill_influence - unedibleGhost_influence + edibleGhost_influence
         //System.out.println("Influence: " + influence + ", " + pill_influence +", " + unedibleGhost_influence+", "+  edibleGhost_influence );
         return influence;
     }
 
 
-    public static void legacyMin(Game g){
-        EnumMap<GHOST, MOVE> ghostMove= new EnumMap<GHOST, MOVE>(GHOST.class);
-        int count = 0;
-        for(GHOST ghostType : GHOST.values()) {
-            if (ghostType == GHOST.SUE){
+    public static ArrayList<EnumMap<GHOST, MOVE>> legacyMin(Game g) {
 
-            }else{
-                int posGhost = g.getGhostCurrentNodeIndex(ghostType);
-                int posPacMan = g.getPacmanCurrentNodeIndex();
-                int node = (int) g.getDistance(posGhost, posPacMan, DM.values()[count]);
-                MOVE move = g.getMoveToMakeToReachDirectNeighbour(posGhost, node);
-                ghostMove.put(ghostType, move);
-                count ++;
+        ArrayList<EnumMap<GHOST, MOVE>> listMoves = new ArrayList<EnumMap<GHOST, MOVE>>();
+        EnumMap<GHOST, MOVE> ghostMove = new EnumMap<GHOST, MOVE>(GHOST.class);
+        int targetNode = g.getPacmanCurrentNodeIndex();
+        Random rnd = new Random();
+        MOVE[] moves = MOVE.values();
+
+        for (GHOST ghostType : GHOST.values()) {
+            if (ghostType == GHOST.SUE) {
+
+                // If ghost is edible, he doesn't follow pacman
+                if (g.isGhostEdible(ghostType)) {
+                    ghostMove.put(GHOST.SUE, moves[rnd.nextInt(moves.length)]);
+                } else {
+                    MOVE[] possibleMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(GHOST.SUE));
+                    for (MOVE move : possibleMoves) {
+                        ghostMove.put(GHOST.SUE, move);
+                        listMoves.add(ghostMove.clone());
+                    }
+                }
+                //ghostMove.put(ghostType, MOVE.NEUTRAL);
+            }
+            if (ghostType == GHOST.BLINKY) {
+                // If ghost is edible, he doesn't follow pacman
+                if (g.isGhostEdible(ghostType)) {
+                    ghostMove.put(GHOST.BLINKY, moves[rnd.nextInt(moves.length)]);
+                } else {
+                    ghostMove.put(GHOST.BLINKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.BLINKY), targetNode, g.getGhostLastMoveMade(GHOST.BLINKY), DM.PATH));
+                }
+            } else if (ghostType == GHOST.INKY) {
+                // If ghost is edible, he doesn't follow pacman
+                if (g.isGhostEdible(ghostType)) {
+                    ghostMove.put(GHOST.INKY, moves[rnd.nextInt(moves.length)]);
+                } else {
+                    ghostMove.put(GHOST.INKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.INKY), targetNode, g.getGhostLastMoveMade(GHOST.INKY), DM.MANHATTAN));
+                }
+            } else if (ghostType == GHOST.PINKY) {
+                // If ghost is edible, he doesn't follow pacman
+                if (g.isGhostEdible(ghostType)) {
+                    ghostMove.put(GHOST.PINKY, moves[rnd.nextInt(moves.length)]);
+                } else {
+                    ghostMove.put(GHOST.PINKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.PINKY), targetNode, g.getGhostLastMoveMade(GHOST.PINKY), DM.EUCLID));
+
+                }
             }
         }
+        if (listMoves.size() == 0) {
+            ghostMove.put(GHOST.SUE, MOVE.NEUTRAL);
+            listMoves.add(ghostMove);
+        }
+        //System.out.println(ghostMove);
+        //System.out.println(listMoves);
+        ghostMove.clear();
+        //System.out.println("List moves 2: " +listMoves);
+        return listMoves;
     }
+
+    public static double eval(Game game) {
+        double MIN_DISTANCE = Double.POSITIVE_INFINITY;
+        int pacMan = game.getPacmanCurrentNodeIndex();
+
+
+        if (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
+            return Double.POSITIVE_INFINITY;
+        } else if (game.gameOver() || game.wasPacManEaten()) {
+            return Double.NEGATIVE_INFINITY;
+        } else {
+            for (GHOST ghost : GHOST.values()) {
+                double posGhost = game.getShortestPathDistance(pacMan, game.getGhostCurrentNodeIndex(ghost));
+                if (posGhost < MIN_DISTANCE) {
+                    MIN_DISTANCE = posGhost;
+                }
+            }
+        return MIN_DISTANCE;
+    }
+}
 }
