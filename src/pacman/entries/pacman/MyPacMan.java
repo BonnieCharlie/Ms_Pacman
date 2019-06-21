@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 
+import static pacman.entries.pacman.Utils.legacyMin;
+
 /*
  * This is the class you need to modify for your entry. In particular, you need to
  * fill in the getAction() method. Any additional classes you write should either
@@ -22,14 +24,22 @@ import java.util.EnumMap;
  */
 public class MyPacMan extends Controller<MOVE> {
     private MOVE myMove = MOVE.NEUTRAL;
-    private int depthResearch = 4;
+    private int depthResearch = 5;
+    private String enemyController;
+
+    public MyPacMan(String enemyController){
+        super();
+        this.enemyController = enemyController;
+        System.out.println(enemyController);
+    }
 
     public MOVE getMove(Game game, long timeDue) {
+
         return expectMinMax(game);
     }
 
-    private MOVE expectMinMax(Game game) {
 
+    private MOVE expectMinMax(Game game) {
         float bestScore = Float.MIN_VALUE;
 
         MOVE[] legalMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
@@ -45,46 +55,32 @@ public class MyPacMan extends Controller<MOVE> {
         }
 
         return bestMOVE;
-        //System.out.println(numberRecursive);
-
     }
 
     private float getMin(Game game, int depth) {
 
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
-            return (float) Utils.InfluenceFunction(game);
-            //return (float) Utils.EvaluationFunction(game);
+            //return (float) Utils.InfluenceFunction(game);
+            return (float) Utils.EvaluationFunction(game);
         }
 
         //long s = System.currentTimeMillis();
         depth = depth - 1;
-        //float utility = Float.MAX_VALUE;
-        //float minScore = utility;
         Game gameMIN = null;
         float average = 0;
 
-        ArrayList<MOVE[]> allLegalMoves = new ArrayList<MOVE[]>();
-        for (GHOST ghost : GHOST.values()) {
-			/*if (game.getGhostLairTime(ghost)==0) {
-				allLegalMoves.add(game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost)));
-			}*/
-            allLegalMoves.add(game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost)));
+        ArrayList<EnumMap<GHOST, MOVE>> combination = null;
+        if (enemyController.equals("RandomGhosts")) {
+            ArrayList<MOVE[]> allLegalMoves = new ArrayList<MOVE[]>();
+            for (GHOST ghost : GHOST.values()) {
+                allLegalMoves.add(game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost)));
+            }
+            combination = getCombination(allLegalMoves);
+
+        }else if(enemyController.equals("Legacy")){
+            combination = legacyMin(game);
         }
 
-		/*if (allLegalMoves.size()==0){
-			return getMax(game, depth);
-		}*/
-/*		int index = 0;
-		for (MOVE[] moves : allLegalMoves) {
-			if (moves.length == 0){
-				allLegalMoves.remove(index);
-				System.out.println(allLegalMoves.size());
-			}
-			index++;
-		}*/
-
-        ArrayList<EnumMap<GHOST, MOVE>> combination = getCombination(allLegalMoves);
-        //System.out.println(combination.size());
         for (EnumMap<GHOST, MOVE> ghostState : combination) {
             gameMIN = game.copy();
             gameMIN.updateGhosts(ghostState);
@@ -113,8 +109,8 @@ public class MyPacMan extends Controller<MOVE> {
         long s = System.currentTimeMillis();
 
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
-            return (float) Utils.InfluenceFunction(game);
-            //return (float) Utils.EvaluationFunction(game);
+            //return (float) Utils.InfluenceFunction(game);
+            return (float) Utils.EvaluationFunction(game);
         }
 
         depth = depth - 1;
