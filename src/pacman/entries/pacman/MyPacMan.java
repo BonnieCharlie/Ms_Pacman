@@ -10,6 +10,8 @@ import pacman.game.Game;
 import pacman.game.internal.Ghost;
 
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 
 /*
@@ -20,99 +22,131 @@ import java.util.EnumMap;
 public class MyPacMan extends Controller<MOVE>
 {
 	private MOVE myMove=MOVE.NEUTRAL;
-	private int depthResearch = 2;
+	private int depthResearch = 6;
 	
 	public MOVE getMove(Game game, long timeDue) 
 	{
-		Long start = System.currentTimeMillis();
+		return expectMinMax(game);
+	}
+
+	private MOVE expectMinMax (Game game){
 
 		float bestScore = Float.MIN_VALUE;
 
 		MOVE[] legalMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
-
+		MOVE bestMOVE = MOVE.NEUTRAL;
 		for (MOVE move : legalMoves){
 			Game g = game.copy();
 			g.updatePacMan(move);
-			float utility = expectMinMax(g, 1, depthResearch);
+			float utility = getMin(g, depthResearch);
 			if (utility>bestScore){
 				bestScore = utility;
-				myMove = move;
+				bestMOVE = move;
 			}
 		}
-		if(System.currentTimeMillis()-start >40 ){
-			System.out.println("TIME EXEC TO MOVE "+ (System.currentTimeMillis()-start));
-		}
-		return myMove;
-	}
 
-	private float expectMinMax (Game g, int typeNode, int depth){
-		if(depth == 0 || g.gameOver() || g.getNumberOfActivePills()+ g.getNumberOfActivePowerPills() ==0){
-			//return (float)Utils.InfluenceFunction(g);
-			long t1 = System.currentTimeMillis();
-			float eval = (float) Utils.InfluenceFunction(g);
-
-			System.out.println("Tempo Eval Function "+ (System.currentTimeMillis()-t1));
-			return eval;
-		}
-		if (typeNode ==0){
-			return getMax(g, typeNode, depth);
-		}else{
-			return getMin(g, typeNode, depth);
-		}
+		return bestMOVE;
+		//System.out.println(numberRecursive);
 
 	}
 
-	private float getMin(Game g, int typeNode, int depth) {
-		Long s = System.currentTimeMillis();
+	private float getMin(Game game, int depth ) {
 
-		float utility = Float.MAX_VALUE;
-		float minScore = utility;
+		if(depth == 0 || game.gameOver() || game.getNumberOfActivePills()+ game.getNumberOfActivePowerPills() ==0){
+			//return (float) Utils.InfluenceFunction(g);
+			return (float) Utils.EvaluationFunction(game);
+		}
+
+		//long s = System.currentTimeMillis();
+		depth=depth-1;
+		//float utility = Float.MAX_VALUE;
+		//float minScore = utility;
 		Game gameMIN = null;
 		float average = 0;
 
-		for(GHOST ghostType : GHOST.values()) {
-			MOVE[] legalMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(ghostType));
-			for (MOVE move : legalMoves) {
-				gameMIN = g.copy();
-				EnumMap<GHOST,MOVE> ghostMove= new EnumMap<GHOST, MOVE>(GHOST.class);
-				ghostMove.put(ghostType,move);
-				gameMIN.updateGhosts(ghostMove);
-				utility = expectMinMax(gameMIN, 0, depth);
-				if (utility < minScore) {
-					minScore = utility;
-				}
-			}
-			average += minScore/GHOST.values().length;
+		ArrayList<MOVE[]> allLegalMoves = new ArrayList<MOVE[]>();
+		for (GHOST ghost: GHOST.values()){
+			allLegalMoves.add(game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost)));
 		}
-		if(System.currentTimeMillis()-s >40 ){
-			System.out.println("TIME EXEC MIN "+ (System.currentTimeMillis()-s));
+
+/*		int index = 0;
+		for (MOVE[] moves : allLegalMoves) {
+			if (moves.length == 0){
+				allLegalMoves.remove(index);
+				System.out.println(allLegalMoves.size());
+			}
+			index++;
+		}*/
+
+		ArrayList<EnumMap<GHOST,MOVE>> combination = getCombination(allLegalMoves);
+		//System.out.println(combination.size());
+		/*
+		if (combination.size()==0){
+			return expectMinMax(g, 0, 0, numberRecursive);
+		}
+		*/
+		for(EnumMap<GHOST,MOVE> ghostState : combination){
+			gameMIN  = game.copy();
+			gameMIN.updateGhosts(ghostState);
+			average+= getMax(gameMIN, depth)/combination.size();
 		}
 
 		return average;
 
 	}
 
-	private float getMax(Game g, int typeNode, int depth) {
-		Long s = System.currentTimeMillis();
+	private float getMax(Game game, int depth) {
+		long s = System.currentTimeMillis();
+
+		if(depth == 0 || game.gameOver() || game.getNumberOfActivePills()+ game.getNumberOfActivePowerPills() ==0){
+			//return (float) Utils.InfluenceFunction(g);
+			return (float) Utils.EvaluationFunction(game);
+		}
+
 		depth=depth-1;
 
 		float utility = Float.MIN_VALUE;
 		float bestScore = utility;
 
-		MOVE[] legalMoves = g.getPossibleMoves(g.getPacmanCurrentNodeIndex());
+		MOVE[] legalMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
 
 		for (MOVE move : legalMoves){
-			Game gameMAX = g.copy();
+			Game gameMAX = game.copy();
 			gameMAX.updatePacMan(move);
-			utility = expectMinMax(gameMAX, 1, depth);
+			utility = getMin(gameMAX, depth);
 			if (utility>bestScore){
 				bestScore = utility;
 			}
 		}
-		if(System.currentTimeMillis()-s >40 ){
-			System.out.println("TIME EXEC MAX "+ (System.currentTimeMillis()-s));
-		}
+
 		return bestScore;
 
+	}
+
+	private ArrayList<EnumMap<GHOST,MOVE>> getCombination(ArrayList<MOVE[]> legalMoves){
+		//long time = System.currentTimeMillis();
+		ArrayList<EnumMap<GHOST,MOVE>> combination  = new ArrayList<EnumMap<GHOST, MOVE>>();
+		EnumMap<GHOST,MOVE>  moveGHOST = new EnumMap<GHOST, MOVE>(GHOST.class);
+
+		for (int i = 0; i<legalMoves.get(0).length ; i++){
+			for(int j=0; j<legalMoves.get(1).length; j++){
+				for(int k = 0; k<legalMoves.get(2).length; k++){
+					for(int t=0; t<legalMoves.get(3).length; t++){
+
+						moveGHOST.put(GHOST.values()[0], legalMoves.get(0)[i]); // BLINKY move
+						moveGHOST.put(GHOST.values()[1], legalMoves.get(1)[j]); // PINKY move
+						moveGHOST.put(GHOST.values()[2], legalMoves.get(2)[k]); // INKY move
+						moveGHOST.put(GHOST.values()[3], legalMoves.get(3)[t]); // SUE move
+
+						combination.add(moveGHOST.clone()); //Add combination
+
+						moveGHOST.clear(); //Remove Elements
+
+					}
+				}
+			}
+		}
+		//System.out.println("COMBINATION TIME " + (System.currentTimeMillis()-time));
+		return combination;
 	}
 }
