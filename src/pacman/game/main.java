@@ -5,6 +5,7 @@ import pacman.controllers.Controller;
 import pacman.controllers.examples.*;
 import pacman.entries.pacman.LegacyPacMan;
 import pacman.entries.pacman.MyMsPacMan;
+import pacman.entries.pacman.MyPacMan;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -26,7 +27,7 @@ public class main {
         //myRunExperiment(new NearestPillPacMan(), new AggressiveGhosts(), numTrials);
         //myRunExperiment(new NearestPillPacMan(), new Legacy(), numTrials);
         //myRunExperiment(new LegacyPacMan(), new Legacy(), numTrials);
-        myRunExperiment(new LegacyPacMan(), new Legacy(), numTrials);
+        myRunExperiment(new MyPacMan(RandomGhosts.class.getSimpleName()), new RandomGhosts(), numTrials);
 
     }
 

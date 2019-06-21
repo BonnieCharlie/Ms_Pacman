@@ -7,10 +7,7 @@ import pacman.game.Constants.DM;
 import pacman.game.Game;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -212,19 +209,29 @@ public class Utils {
         double MIN_DISTANCE = Double.POSITIVE_INFINITY;
         int pacMan = game.getPacmanCurrentNodeIndex();
 
-
         if (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             return Double.POSITIVE_INFINITY;
         } else if (game.gameOver() || game.wasPacManEaten()) {
             return Double.NEGATIVE_INFINITY;
-        } else {
+        }else {
             for (GHOST ghost : GHOST.values()) {
                 double posGhost = game.getShortestPathDistance(pacMan, game.getGhostCurrentNodeIndex(ghost));
+
+                if (posGhost == -1) {
+                    posGhost = Double.POSITIVE_INFINITY;
+                }
+
+                if (game.isGhostEdible(ghost)){
+                    System.out.println("GHOST " + ghost + ": " + posGhost);
+                }
                 if (posGhost < MIN_DISTANCE) {
                     MIN_DISTANCE = posGhost;
                 }
             }
-            return MIN_DISTANCE;
         }
+        if (MIN_DISTANCE > 60){
+            MIN_DISTANCE += game.getScore();
+        }
+        return MIN_DISTANCE;
     }
 }
