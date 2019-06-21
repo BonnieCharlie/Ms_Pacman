@@ -10,7 +10,7 @@ import java.util.EnumMap;
 
 import static pacman.entries.pacman.Utils.legacyMin;
 
-public class LegacyPacMan extends Controller<MOVE>  {
+public class LegacyPacMan extends Controller<MOVE> {
 
     private MOVE myMove=MOVE.NEUTRAL;
     private int depthResearch = 10;
@@ -59,7 +59,7 @@ public class LegacyPacMan extends Controller<MOVE>  {
         for(int i=0; i<listMoves.size(); i++){
             gameMIN = game.copy();
             gameMIN.updateGhosts(listMoves.get(i));
-            average+= getMax(gameMIN, depth);
+            average += getMax(gameMIN, depth);
             //utility += utility/listMoves.size();
         }
         average = average/listMoves.size();

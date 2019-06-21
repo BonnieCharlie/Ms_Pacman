@@ -33,9 +33,9 @@ public final class Constants
 	public enum GHOST
 	{
 		BLINKY(40), //40
-		PINKY(1000060), //60
-		INKY(1000080), //80
-		SUE(1000000); //100
+		PINKY(60), //60
+		INKY(80), //80
+		SUE(100); //100
 		
 		public final int initialLairTime;
 		

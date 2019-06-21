@@ -31,37 +31,18 @@ public class Utils {
         Constants.GHOST nearestghost;
         nearestghost = null;
         for (Constants.GHOST ghost : Constants.GHOST.values()) {
-            if (game.getGhostLairTime(ghost) == 0) {
-                distance = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
-                //distance = game.getManhattanDistance(posPacman,game.getGhostCurrentNodeIndex(ghost));
-                //distance = (float) game.getEuclideanDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
-                if (distance < oldDistance) {
-                    oldDistance = distance;
-                    nearestghost = ghost;
-                }
+
+            distance = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
+
+            if (distance == -1) {
+                distance = 10000;
             }
+            if (distance < oldDistance) {
+                oldDistance = distance;
+                nearestghost = ghost;
+            }
+
         }
-        /*
-        int[] pills=game.getPillIndices();
-        int[] powerPills=game.getPowerPillIndices();
-
-        ArrayList<Integer> targets=new ArrayList<Integer>();
-
-        for(int i=0;i<pills.length;i++)					//check which pills are available
-            if(game.isPillStillAvailable(i))
-                targets.add(pills[i]);
-
-        for(int i=0;i<powerPills.length;i++)			//check with power pills are available
-            if(game.isPowerPillStillAvailable(i))
-                targets.add(powerPills[i]);
-
-        int[] targetsArray=new int[targets.size()];		//convert from ArrayList to array
-
-        for(int i=0;i<targetsArray.length;i++)
-            targetsArray[i]=targets.get(i);
-
-        float minDistanceToNextPill =  game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman,targetsArray, Constants.DM.MANHATTAN));
-        */
         return oldDistance;
     }
 
@@ -69,7 +50,7 @@ public class Utils {
         float influence = 0; // UTILITY
 
         // Optimize Parameters
-        float p_dots = 1 / (float) 10;
+        float p_dots = 1 / (float) 5;
         float p_run = 1;
         float p_chase = 30;
         float p_powerDots = 1;
@@ -133,7 +114,7 @@ public class Utils {
         }
 */
         //Pill influence total
-        for(int k=0; k<n_d; k++){
+        for (int k = 0; k < n_d; k++) {
             //double den = game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
             double den = game.getShortestPathDistance(posPACMAN, pillIndices[k]);
             //double den = game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
@@ -141,7 +122,7 @@ public class Utils {
             if (den == 0) // correzione se +inf
                 den = 1;
 
-            pill_influence += (float)p_dots*n_d_signed/den;
+            pill_influence += (float) p_dots * n_d_signed / den;
             //System.out.println("pill_influence " + k + ": " + pill_influence);
         }
 
@@ -174,7 +155,7 @@ public class Utils {
         ArrayList<EnumMap<GHOST, MOVE>> listMoves = new ArrayList<EnumMap<GHOST, MOVE>>();
         EnumMap<GHOST, MOVE> ghostMove = new EnumMap<GHOST, MOVE>(GHOST.class);
         int targetNode = g.getPacmanCurrentNodeIndex();
-        Random rnd = new Random();
+        //Random rnd = new Random();
         MOVE[] moves = MOVE.values();
 
         for (GHOST ghostType : GHOST.values()) {
@@ -182,7 +163,7 @@ public class Utils {
 
                 // If ghost is edible, he doesn't follow pacman
                 if (g.isGhostEdible(ghostType)) {
-                    ghostMove.put(GHOST.SUE, moves[rnd.nextInt(moves.length)]);
+                    ghostMove.put(GHOST.SUE, g.getGhostLastMoveMade(GHOST.SUE));
                 } else {
                     MOVE[] possibleMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(GHOST.SUE));
                     for (MOVE move : possibleMoves) {
@@ -195,21 +176,21 @@ public class Utils {
             if (ghostType == GHOST.BLINKY) {
                 // If ghost is edible, he doesn't follow pacman
                 if (g.isGhostEdible(ghostType)) {
-                    ghostMove.put(GHOST.BLINKY, moves[rnd.nextInt(moves.length)]);
+                    ghostMove.put(GHOST.BLINKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.BLINKY), targetNode, g.getGhostLastMoveMade(GHOST.BLINKY), DM.PATH));
                 } else {
                     ghostMove.put(GHOST.BLINKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.BLINKY), targetNode, g.getGhostLastMoveMade(GHOST.BLINKY), DM.PATH));
                 }
             } else if (ghostType == GHOST.INKY) {
                 // If ghost is edible, he doesn't follow pacman
                 if (g.isGhostEdible(ghostType)) {
-                    ghostMove.put(GHOST.INKY, moves[rnd.nextInt(moves.length)]);
+                    ghostMove.put(GHOST.INKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.INKY), targetNode, g.getGhostLastMoveMade(GHOST.INKY), DM.MANHATTAN));
                 } else {
                     ghostMove.put(GHOST.INKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.INKY), targetNode, g.getGhostLastMoveMade(GHOST.INKY), DM.MANHATTAN));
                 }
             } else if (ghostType == GHOST.PINKY) {
                 // If ghost is edible, he doesn't follow pacman
                 if (g.isGhostEdible(ghostType)) {
-                    ghostMove.put(GHOST.PINKY, moves[rnd.nextInt(moves.length)]);
+                    ghostMove.put(GHOST.PINKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.PINKY), targetNode, g.getGhostLastMoveMade(GHOST.PINKY), DM.EUCLID));
                 } else {
                     ghostMove.put(GHOST.PINKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.PINKY), targetNode, g.getGhostLastMoveMade(GHOST.PINKY), DM.EUCLID));
 
@@ -243,7 +224,7 @@ public class Utils {
                     MIN_DISTANCE = posGhost;
                 }
             }
-        return MIN_DISTANCE;
+            return MIN_DISTANCE;
+        }
     }
-}
 }
