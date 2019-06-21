@@ -113,6 +113,7 @@ public class Utils {
         int posPACMAN = game.getPacmanCurrentNodeIndex(); //Pacman Position
 
         //PILLS INFLUENCE
+        /*
         for (int k = 0; k < (n_d / 4); k++) {
             double den = game.getShortestPathDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.PATH));
             //double den = game.getManhattanDistance(posPACMAN, game.getClosestNodeIndexFromNodeIndex(posPACMAN, pillIndices, Constants.DM.MANHATTAN));
@@ -130,9 +131,9 @@ public class Utils {
                 den = 1;
             powerPill_influence += (float) p_powerDots * n_pd_signed / den;
         }
-
+*/
         //Pill influence total
-/*        for(int k=0; k<n_d; k++){
+        for(int k=0; k<n_d; k++){
             //double den = game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
             double den = game.getShortestPathDistance(posPACMAN, pillIndices[k]);
             //double den = game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
@@ -142,7 +143,7 @@ public class Utils {
 
             pill_influence += (float)p_dots*n_d_signed/den;
             //System.out.println("pill_influence " + k + ": " + pill_influence);
-        }*/
+        }
 
 
         //System.out.println("pill_influence totale" + pill_influence);
