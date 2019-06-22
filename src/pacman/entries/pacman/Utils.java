@@ -287,38 +287,46 @@ public class Utils {
         int posPacman = game.getPacmanCurrentNodeIndex();
         int[] pillIndices = game.getPowerPillIndices();
         int minDistancePill = -1;
-        int minDistanceGhost = 1;
+        int minDistanceGhost = Integer.MAX_VALUE;
         int activePowerPills= game.getNumberOfActivePowerPills();
         float utility = 0;
 
         EnumMap<GHOST, Integer> distanceGhosts = new EnumMap<GHOST, Integer>(GHOST.class);
 
+        // Save a map of ghosts distances and the minimum distance
         for (GHOST ghost: GHOST.values()){
             int dist = game.getShortestPathDistance(posPacman,game.getGhostCurrentNodeIndex(ghost));
-
             //System.out.println(dist);
             distanceGhosts.put(ghost, dist);
-            if (dist!=-1){
-                distanceGhosts.put(ghost,dist);
-                if(dist<minDistanceGhost){
-                    minDistanceGhost=dist;
-                }
+            if(dist<minDistanceGhost && dist != (-1)){
+                minDistanceGhost=dist;
             }
-
-
         }
 
+        // Calculate the pill that has minimum distance
+        for (int pill_index : pillIndices) {
+            //double den = game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
+            int distancePill = game.getShortestPathDistance(posPacman, pill_index);
+            //double den = game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
+            if(minDistancePill>distancePill|| minDistancePill ==-1){
+                minDistancePill = distancePill;
+            }
+        }
+
+        // RULES
         for (EnumMap.Entry<GHOST,Integer> entry: distanceGhosts.entrySet()){
             int value = entry.getValue();
-            if (value>40){
-                utility+=value;
+            if (value > 40){
+                utility += 100;
             }
         }
-        if (minDistanceGhost>10){
-            utility += score;
+        System.out.println(minDistanceGhost);
+        if (minDistanceGhost>50)
+            utility += game.getShortestPathDistance(posPacman, minDistancePill, game.getPacmanLastMoveMade());
+        if(minDistanceGhost <10){
+            utility -= 100;
         }
         //System.out.println(utility);
         return utility;
     }
-
 }

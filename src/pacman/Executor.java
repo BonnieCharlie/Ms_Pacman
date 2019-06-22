@@ -70,7 +70,7 @@ public class Executor
 //		exec.runGameTimed(new HumanController(new KeyBoardInput()), new Legacy(),visual);
 //		exec.runGameTimed(new MyMsPacMan(), new AggressiveGhosts(),visual);
 		//exec.runGameTimed(new ExpectiminimaxPacMan(), new RandomGhosts(),visual);
-		exec.runGameTimed(new MyPacMan(Legacy.class.getSimpleName()), new Legacy(), visual);
+		exec.runGameTimed(new MyPacMan(RandomGhosts.class.getSimpleName()), new RandomGhosts(), visual);
 
 
 		//*/
