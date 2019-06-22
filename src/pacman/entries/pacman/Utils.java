@@ -281,6 +281,11 @@ public class Utils {
     }
 
     public static float rulesUtilityFunction(Game game){
+        if (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
+            return Float.MAX_VALUE;
+        } else if (game.gameOver() || game.wasPacManEaten()) {
+            return Float.MIN_VALUE;
+        }
 
         //GAME ELEMENTS
         int score = game.getScore();
@@ -305,28 +310,29 @@ public class Utils {
 
         // Calculate the pill that has minimum distance
         for (int pill_index : pillIndices) {
-            //double den = game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
             int distancePill = game.getShortestPathDistance(posPacman, pill_index);
-            //double den = game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
             if(minDistancePill>distancePill|| minDistancePill ==-1){
                 minDistancePill = distancePill;
             }
         }
+        int numNearGhosts = 0;
 
         // RULES
         for (EnumMap.Entry<GHOST,Integer> entry: distanceGhosts.entrySet()){
             int value = entry.getValue();
             if (value > 40){
-                utility += 100;
+                numNearGhosts++;
             }
         }
-        System.out.println(minDistanceGhost);
-        if (minDistanceGhost>50)
-            utility += game.getShortestPathDistance(posPacman, minDistancePill, game.getPacmanLastMoveMade());
-        if(minDistanceGhost <10){
-            utility -= 100;
+        utility += 100*numNearGhosts;
+        if (numNearGhosts == 4 || minDistanceGhost > 20){
+            utility = utility - game.getManhattanDistance(posPacman, minDistancePill) + score;
+        }
+        //System.out.println(minDistanceGhost);
+        if(minDistanceGhost <20){
+            utility -= 200;
         }
         //System.out.println(utility);
-        return utility;
+        return utility+minDistanceGhost;
     }
 }
