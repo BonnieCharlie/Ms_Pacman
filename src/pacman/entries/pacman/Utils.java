@@ -1,10 +1,12 @@
 package pacman.entries.pacman;
 
+import org.omg.PortableInterceptor.INACTIVE;
 import pacman.game.Constants;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Constants.DM;
 import pacman.game.Game;
+import pacman.game.internal.Ghost;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -163,6 +165,9 @@ public class Utils {
                     ghostMove.put(GHOST.SUE, g.getGhostLastMoveMade(GHOST.SUE));
                 } else {
                     MOVE[] possibleMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(GHOST.SUE));
+                    if (possibleMoves.length<3){
+                        possibleMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(GHOST.SUE), g.getGhostLastMoveMade(GHOST.SUE));
+                    }
                     for (MOVE move : possibleMoves) {
                         ghostMove.put(GHOST.SUE, move);
                         listMoves.add(ghostMove.clone());
@@ -234,4 +239,86 @@ public class Utils {
         }
         return MIN_DISTANCE;
     }
+
+    public static float utilityFunction(Game game){
+
+        int posPacman = game.getPacmanCurrentNodeIndex();
+        int[] pillIndices = game.getPowerPillIndices();
+        int minDistancePill = -1;
+
+        //PILL MIN DISTANCE
+        for (int pill_index : pillIndices) {
+            //double den = game.getEuclideanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
+            int distancePill = game.getShortestPathDistance(posPacman, pill_index);
+            //double den = game.getManhattanDistance(game.getPacmanCurrentNodeIndex(), targets.get(k));
+            if(minDistancePill>distancePill|| minDistancePill ==-1){
+                minDistancePill = distancePill;
+            }
+        }
+
+
+        int distanceGhosts = 1;
+        int proximityGhosts = 0;
+        for (Constants.GHOST ghost : Constants.GHOST.values()) {
+
+            int distance = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
+            //System.out.println("Distance"+distance);
+            distanceGhosts+=distance;
+            if(distance<=40 && distance!=-1){
+                proximityGhosts+=1;
+            }
+
+        }
+
+        int activePowerPills= game.getNumberOfActivePowerPills();
+
+        int score = game.getScore();
+
+        float utility = (score+ (1/(float)minDistancePill) - (1/(float)distanceGhosts) -proximityGhosts);
+
+        System.out.println("UTILITY - "+ utility +" Proximity ghsot " + proximityGhosts);
+        return utility;
+    }
+
+    public static float rulesUtilityFunction(Game game){
+
+        //GAME ELEMENTS
+        int score = game.getScore();
+        int posPacman = game.getPacmanCurrentNodeIndex();
+        int[] pillIndices = game.getPowerPillIndices();
+        int minDistancePill = -1;
+        int minDistanceGhost = 1;
+        int activePowerPills= game.getNumberOfActivePowerPills();
+        float utility = 0;
+
+        EnumMap<GHOST, Integer> distanceGhosts = new EnumMap<GHOST, Integer>(GHOST.class);
+
+        for (GHOST ghost: GHOST.values()){
+            int dist = game.getShortestPathDistance(posPacman,game.getGhostCurrentNodeIndex(ghost));
+
+            //System.out.println(dist);
+            distanceGhosts.put(ghost, dist);
+            if (dist!=-1){
+                distanceGhosts.put(ghost,dist);
+                if(dist<minDistanceGhost){
+                    minDistanceGhost=dist;
+                }
+            }
+
+
+        }
+
+        for (EnumMap.Entry<GHOST,Integer> entry: distanceGhosts.entrySet()){
+            int value = entry.getValue();
+            if (value>40){
+                utility+=value;
+            }
+        }
+        if (minDistanceGhost>10){
+            utility += score;
+        }
+        //System.out.println(utility);
+        return utility;
+    }
+
 }
