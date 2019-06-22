@@ -24,10 +24,10 @@ import static pacman.entries.pacman.Utils.legacyMin;
  */
 public class MyPacMan extends Controller<MOVE> {
     private MOVE myMove = MOVE.NEUTRAL;
-    private int depthResearch = 8;
+    private int depthResearch = 10;
     private String enemyController;
 
-    public MyPacMan(String enemyController){
+    public MyPacMan(String enemyController) {
         super();
         this.enemyController = enemyController;
         //System.out.println(enemyController);
@@ -35,7 +35,10 @@ public class MyPacMan extends Controller<MOVE> {
 
     public MOVE getMove(Game game, long timeDue) {
 
-        return expectMinMax(game);
+        long t = System.currentTimeMillis();
+        MOVE bestMove = expectMinMax(game);
+        System.err.println("TIME EXEC " + (System.currentTimeMillis() - t));
+        return bestMove;
     }
 
 
@@ -44,6 +47,7 @@ public class MyPacMan extends Controller<MOVE> {
 
         MOVE[] legalMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
         MOVE bestMOVE = MOVE.NEUTRAL;
+
         for (MOVE move : legalMoves) {
             Game g = game.copy();
             g.updatePacMan(move);
@@ -54,6 +58,7 @@ public class MyPacMan extends Controller<MOVE> {
             }
         }
 
+
         return bestMOVE;
     }
 
@@ -62,7 +67,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             //return (float) Utils.InfluenceFunction(game);
             //return (float) Utils.EvaluationFunction(game);
-            return  Utils.rulesUtilityFunction(game);
+            return Utils.rulesUtilityFunction(game);
         }
 
         //long s = System.currentTimeMillis();
@@ -75,17 +80,22 @@ public class MyPacMan extends Controller<MOVE> {
             ArrayList<MOVE[]> allLegalMoves = new ArrayList<MOVE[]>();
             for (GHOST ghost : GHOST.values()) {
 
-                MOVE[] movesLegal = game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost));
+                int positionGHOST = game.getGhostCurrentNodeIndex(ghost);
+                //System.out.println("EDIBLE TIME " +game.getGhostEdibleTime(ghost));
+                //System.out.println("Is Edible " + game.isGhostEdible(ghost));
+
                 //UPSTREAM HEURISTIC
-                if (movesLegal.length>=3){
-                    allLegalMoves.add(movesLegal);
-                }else{ //IF GHOST IS NOT IN A JUNCTION CUT THE LAST MOVE MADE
-                    allLegalMoves.add(game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost), game.getGhostLastMoveMade(ghost)));
+                // IF A GHOST IS IN A CORRIDOR CUT THE REVERSE MOVE
+                if (game.isJunction(positionGHOST)) {
+                    allLegalMoves.add(game.getPossibleMoves(positionGHOST));
+                } else {
+                    allLegalMoves.add(game.getPossibleMoves(positionGHOST, game.getGhostLastMoveMade(ghost)));
+
                 }
             }
             combination = getCombination(allLegalMoves);
-
-        }else if(enemyController.equals("Legacy")){
+            //System.out.println("COMBINATION SIZE ----------- " + combination.size());
+        } else if (enemyController.equals("Legacy")) {
             combination = legacyMin(game);
         }
 
@@ -94,20 +104,6 @@ public class MyPacMan extends Controller<MOVE> {
             gameMIN.updateGhosts(ghostState);
             average += getMax(gameMIN, depth) / combination.size();
         }
-		/* //MIN only For ONE GHOST
-		EnumMap<GHOST,MOVE> mappa = new EnumMap<GHOST, MOVE>(GHOST.class);
-		MOVE[] possibleMOves = game.getPossibleMoves(game.getGhostCurrentNodeIndex(GHOST.BLINKY));
-		for(MOVE mossa : possibleMOves){
-			mappa.put(GHOST.BLINKY, mossa);
-			mappa.put(GHOST.SUE, MOVE.NEUTRAL);
-			mappa.put(GHOST.PINKY, MOVE.NEUTRAL);
-			mappa.put(GHOST.INKY, MOVE.NEUTRAL);
-
-			gameMIN  = game.copy();
-			gameMIN.updateGhosts(mappa);
-			average+= getMax(gameMIN, depth)/possibleMOves.length;
-		}
-		*/
 
         return average;
 
@@ -119,7 +115,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             //return (float) Utils.InfluenceFunction(game);
             //return (float) Utils.EvaluationFunction(game);
-            return  Utils.rulesUtilityFunction(game);
+            return Utils.rulesUtilityFunction(game);
         }
 
         depth = depth - 1;
@@ -157,11 +153,11 @@ public class MyPacMan extends Controller<MOVE> {
             combination.add(moveGHOST.clone());
 
             return combination;
-        } else{
+        } else {
 
             for (int i = 0; i < legalMoves.get(0).length; i++) {
 
-                if(legalMoves.get(1).length != 0) {
+                if (legalMoves.get(1).length != 0) {
 
                     for (int j = 0; j < legalMoves.get(1).length; j++) {
 
@@ -193,7 +189,7 @@ public class MyPacMan extends Controller<MOVE> {
                             moveGHOST.clear(); //Remove Elements
                         }
                     }
-                }else{
+                } else {
                     moveGHOST.put(GHOST.BLINKY, legalMoves.get(0)[i]); // BLINKY move
                     combination.add(moveGHOST.clone());
                     moveGHOST.clear();
