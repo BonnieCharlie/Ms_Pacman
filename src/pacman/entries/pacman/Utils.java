@@ -281,6 +281,7 @@ public class Utils {
     }
 
     public static float rulesUtilityFunction(Game game){
+
         if (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             return Float.MAX_VALUE;
         } else if (game.gameOver() || game.wasPacManEaten()) {
@@ -302,37 +303,35 @@ public class Utils {
         for (GHOST ghost: GHOST.values()){
             int dist = game.getShortestPathDistance(posPacman,game.getGhostCurrentNodeIndex(ghost));
             //System.out.println(dist);
-            distanceGhosts.put(ghost, dist);
-            if(dist<minDistanceGhost && dist != (-1)){
+            if (dist ==-1){
+                dist = 10000;
+            }
+            distanceGhosts.put(ghost,dist);
+            if(dist<minDistanceGhost){
                 minDistanceGhost=dist;
             }
         }
 
-        // Calculate the pill that has minimum distance
-        for (int pill_index : pillIndices) {
-            int distancePill = game.getShortestPathDistance(posPacman, pill_index);
-            if(minDistancePill>distancePill|| minDistancePill ==-1){
-                minDistancePill = distancePill;
-            }
-        }
-        int numNearGhosts = 0;
+        //Calculate Distance between pacman and nearest pill
+        minDistancePill = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, pillIndices, DM.PATH));
 
+        int numFarGhosts = 0;
         // RULES
         for (EnumMap.Entry<GHOST,Integer> entry: distanceGhosts.entrySet()){
             int value = entry.getValue();
             if (value > 40){
-                numNearGhosts++;
+                numFarGhosts++;
             }
         }
-        utility += 100*numNearGhosts;
-        if (numNearGhosts == 4 || minDistanceGhost > 20){
-            utility = utility - game.getManhattanDistance(posPacman, minDistancePill) + score;
+        utility += 100*numFarGhosts;
+        if (minDistanceGhost > 20){
+            utility = utility +(1/(float)minDistancePill)*1000 + score;
         }
         //System.out.println(minDistanceGhost);
         if(minDistanceGhost <20){
             utility -= 200;
         }
         //System.out.println(utility);
-        return utility+minDistanceGhost;
+        return utility;
     }
 }

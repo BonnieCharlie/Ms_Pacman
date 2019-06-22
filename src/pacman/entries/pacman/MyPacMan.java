@@ -24,7 +24,7 @@ import static pacman.entries.pacman.Utils.legacyMin;
  */
 public class MyPacMan extends Controller<MOVE> {
     private MOVE myMove = MOVE.NEUTRAL;
-    private int depthResearch = 10;
+    private int depthResearch = 6;
     private String enemyController;
 
     public MyPacMan(String enemyController) {
