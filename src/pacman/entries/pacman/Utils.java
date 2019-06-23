@@ -267,6 +267,7 @@ public class Utils {
 
 
     public static float utilityFunction(Game game){
+
         int posPacman = game.getPacmanCurrentNodeIndex();
         int [] powerPillIndices = game.getPowerPillIndices();
         int nearestPowerPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, powerPillIndices, DM.PATH));
@@ -295,6 +296,8 @@ public class Utils {
             }
         }
 
+        float overallDistanceEdibleGhost = 0;
+
         int[] ghostUnedibleIndices = new int[4];
         int[] ghostEdibleIndices = new int[4];
         for (GHOST ghostType : GHOST.values()) {
@@ -305,6 +308,7 @@ public class Utils {
                 int posGhost = game.getGhostCurrentNodeIndex(ghostType);
                 ghostEdibleIndices[n_c] = posGhost;
                 int distanceBetweenGhostAndPacman = game.getShortestPathDistance(posPacman, posGhost);
+                overallDistanceEdibleGhost += (ghostType.initialLairTime/(float)40) * (1/(float)distanceBetweenGhostAndPacman);
                 if(distanceBetweenGhostAndPacman < nearestEdibleGhostDistance){
                     nearestEdibleGhostDistance = distanceBetweenGhostAndPacman;
                     nearestGhostEdible = ghostType;
@@ -328,8 +332,25 @@ public class Utils {
         for(int i=0;i<activePowerPills.length;i++)
             targetNodeIndices[activePills.length+i]=activePowerPills[i];
 
-        int nearestPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, targetNodeIndices, DM.PATH));
+        int nearestPillDistance = 0;
+        try{
+            nearestPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, targetNodeIndices, DM.PATH));
+        }catch (Exception ex){
+            System.out.println(ex.getMessage() + "  targetNodeIndices: " + Arrays.toString(targetNodeIndices) + "    posPacman: " + posPacman);
+        }
+        //int nearestPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, targetNodeIndices, DM.PATH));
         int nearestGhostToTheNearestPowerPillDistance = game.getShortestPathDistance(nearestGhostDistance, game.getClosestNodeIndexFromNodeIndex(posPacman, powerPillIndices, DM.PATH));
+
+        // *********************** RULES *************************
+        // WINNING CONDITION
+        if (n_totalPills + game.getNumberOfActivePowerPills() == 0) {
+            utility += 10000;
+        }
+
+        // LOST CONDITION
+        if (game.gameOver() || game.wasPacManEaten()) {
+            utility -= 1000;
+        }
 
         // RULE 1: move to the nearest power pill
         if(game.getNumberOfActivePowerPills()>1 && nearestGhostDistance <=8 && nearestPowerPillDistance<=nearestGhostToTheNearestPowerPillDistance){
@@ -339,7 +360,7 @@ public class Utils {
         // RULE 2: move to the nearest edible ghost if exists at least one edible ghost
         if(n_c >= 1 && nearestGhostDistance <= 20 && nearestEdibleGhostDistance <=20 ){
             if(game.isGhostEdible(nearestGhost)){
-                utility = utility + n_c*(1/(float)nearestEdibleGhostDistance) + game.getScore();
+                utility = utility + n_c*(overallDistanceEdibleGhost) + game.getScore();
             }
         }
 
@@ -352,6 +373,9 @@ public class Utils {
         if ((nearestGhostDistance<=10 && !game.isGhostEdible(nearestGhost))){
             utility -= 1000;
         }
+
+        // RULE 5: considering overall distance from ghosts
+
 
         //System.out.println("nearestEdibleGhostDistance: " + nearestEdibleGhostDistance + ", nearestGhostDistance: " + nearestGhostDistance + ", utility = " + utility);
         return utility;
