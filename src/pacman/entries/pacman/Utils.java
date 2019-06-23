@@ -308,7 +308,7 @@ public class Utils {
                 int posGhost = game.getGhostCurrentNodeIndex(ghostType);
                 ghostEdibleIndices[n_c] = posGhost;
                 int distanceBetweenGhostAndPacman = game.getShortestPathDistance(posPacman, posGhost);
-                overallDistanceEdibleGhost += (ghostType.initialLairTime/(float)40) * (1/(float)distanceBetweenGhostAndPacman);
+                overallDistanceEdibleGhost += (ghostType.initialLairTime/(float)20) * (1/(float)distanceBetweenGhostAndPacman);
                 if(distanceBetweenGhostAndPacman < nearestEdibleGhostDistance){
                     nearestEdibleGhostDistance = distanceBetweenGhostAndPacman;
                     nearestGhostEdible = ghostType;
@@ -334,7 +334,11 @@ public class Utils {
 
         int nearestPillDistance = 0;
         try{
-            nearestPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, targetNodeIndices, DM.PATH));
+            if(targetNodeIndices.length == 0){
+                nearestPillDistance = 1;
+            }else{
+                nearestPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, targetNodeIndices, DM.PATH));
+            }
         }catch (Exception ex){
             System.out.println(ex.getMessage() + "  targetNodeIndices: " + Arrays.toString(targetNodeIndices) + "    posPacman: " + posPacman);
         }
@@ -359,7 +363,7 @@ public class Utils {
 
         // RULE 2: move to the nearest edible ghost if exists at least one edible ghost
         if(n_c >= 1 && nearestGhostDistance <= 20 && nearestEdibleGhostDistance <=20 ){
-            if(game.isGhostEdible(nearestGhost)){
+            if(game.isGhostEdible(nearestGhost) && (game.getGhostEdibleTime(nearestGhost)>2)){
                 utility = utility + n_c*(overallDistanceEdibleGhost) + game.getScore();
             }
         }
