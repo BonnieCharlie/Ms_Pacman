@@ -349,6 +349,9 @@ public class Utils {
         float utility = 0;
         int n_r = 0; // number of unedible ghosts
         int n_c = 0; // number of edible ghosts
+        int n_d = game.getNumberOfActivePills();// number of uneated pills
+        int n_totalPills = game.getNumberOfPills(); // Total number of pills;
+        int n_d_signed = n_totalPills - n_d; // number of eated pills
 
         // Save a map of ghosts distances and the minimum distance
         for (GHOST ghost: GHOST.values()){
@@ -418,7 +421,7 @@ public class Utils {
 
         // RULE 5: move to the nearest pill
         if (nearestGhostDistance>=20 || game.isGhostEdible(nearestGhost)){
-            utility = utility +(1/(float)nearestPillDistance) + game.getScore();
+            utility = utility +(1/(float)nearestPillDistance) + n_d_signed + game.getScore();
         }
 
         // RULE 6: move away from ghosts
