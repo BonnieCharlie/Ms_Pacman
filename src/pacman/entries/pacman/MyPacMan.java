@@ -24,13 +24,18 @@ import static pacman.entries.pacman.Utils.legacyMin;
  */
 public class MyPacMan extends Controller<MOVE> {
     private MOVE myMove = MOVE.NEUTRAL;
-    private int depthResearch = 6;
+    private int depthResearch;
     private String enemyController;
 
     public MyPacMan(String enemyController) {
         super();
         this.enemyController = enemyController;
         //System.out.println(enemyController);
+        if (enemyController.equals("Legacy")){
+            this.depthResearch=16;
+        }else{
+            this.depthResearch=8;
+        }
     }
 
     public MOVE getMove(Game game, long timeDue) {
@@ -67,7 +72,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             //return (float) Utils.InfluenceFunction(game);
             //return (float) Utils.EvaluationFunction(game);
-            return Utils.rulesUtilityFunction(game);
+            return Utils.utilityFunction(game);
         }
 
         //long s = System.currentTimeMillis();
@@ -115,7 +120,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             //return (float) Utils.InfluenceFunction(game);
             //return (float) Utils.EvaluationFunction(game);
-            return Utils.rulesUtilityFunction(game);
+            return Utils.utilityFunction(game);
         }
 
         depth = depth - 1;
