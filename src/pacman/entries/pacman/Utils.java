@@ -344,6 +344,8 @@ public class Utils {
         EnumMap<GHOST, Integer> distanceGhosts = new EnumMap<GHOST, Integer>(GHOST.class);
         int nearestGhostDistance = Integer.MAX_VALUE;
         int nearestEdibleGhostDistance = Integer.MAX_VALUE;
+        GHOST nearestGhostEdible = GHOST.BLINKY;
+        GHOST nearestGhost = GHOST.SUE;
         float utility = 0;
         int n_r = 0; // number of unedible ghosts
         int n_c = 0; // number of edible ghosts
@@ -373,6 +375,7 @@ public class Utils {
                 int distanceBetweenGhostAndPacman = game.getShortestPathDistance(posPacman, posGhost);
                 if(distanceBetweenGhostAndPacman < nearestEdibleGhostDistance){
                     nearestEdibleGhostDistance = distanceBetweenGhostAndPacman;
+                    nearestGhostEdible = ghostType;
                 }
                 n_c++;
             }
@@ -406,10 +409,13 @@ public class Utils {
             utility += nearestPowerPillDistance;
         }
 
-        // RULE 4: move to the nearest edible ghost
+        // RULE 4: move to the nearest edible ghost if exists at least one edible ghost
         if((game.isGhostEdible(GHOST.BLINKY)|| game.isGhostEdible(GHOST.INKY) || game.isGhostEdible(GHOST.PINKY) || game.isGhostEdible(GHOST.SUE)) && nearestGhostDistance<=8 && nearestEdibleGhostDistance <=8 ){
-            utility = utility - nearestGhostDistance + game.getScore();
+            utility += utility +(1/(float)nearestGhostDistance) + game.getScore();
         }
+        /*if (game.isGhostEdible(nearestGhostEdible) && game.getShortestPathDistance(posPacman, nearestEdibleGhostDistance)<=10){
+            utility += utility +(1/(float)nearestGhostDistance) + game.getScore();
+        }*/
 
         // RULE 5: move to the nearest pill
         if (nearestGhostDistance>=20){
@@ -417,7 +423,7 @@ public class Utils {
         }
 
         // RULE 6: move away from ghosts
-        if (nearestGhostDistance<=20){
+        if ((nearestGhostDistance<=10 && !game.isGhostEdible(nearestGhost)) || (nearestGhostDistance<=10 && nearestGhostEdible!=nearestGhost)){
             utility -= 1000;
         }
 
