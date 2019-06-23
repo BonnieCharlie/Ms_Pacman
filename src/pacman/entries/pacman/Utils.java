@@ -347,14 +347,14 @@ public class Utils {
 
         // *********************** RULES *************************
         // WINNING CONDITION
-        if (n_totalPills + game.getNumberOfActivePowerPills() == 0) {
+        /*if (n_totalPills + game.getNumberOfActivePowerPills() == 0) {
             utility += 10000;
         }
 
         // LOST CONDITION
         if (game.gameOver() || game.wasPacManEaten()) {
             utility -= 1000;
-        }
+        }*/
 
         // RULE 1: move to the nearest power pill
         if(game.getNumberOfActivePowerPills()>1 && nearestGhostDistance <=8 && nearestPowerPillDistance<=nearestGhostToTheNearestPowerPillDistance){
