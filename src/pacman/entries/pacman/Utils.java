@@ -410,20 +410,19 @@ public class Utils {
         }
 
         // RULE 4: move to the nearest edible ghost if exists at least one edible ghost
-        if((game.isGhostEdible(GHOST.BLINKY)|| game.isGhostEdible(GHOST.INKY) || game.isGhostEdible(GHOST.PINKY) || game.isGhostEdible(GHOST.SUE)) && nearestGhostDistance<=8 && nearestEdibleGhostDistance <=8 ){
-            utility += utility +(1/(float)nearestGhostDistance) + game.getScore();
+        if(n_c >= 1 && nearestGhostDistance <= 20 && nearestEdibleGhostDistance <=20 ){
+            if(game.isGhostEdible(nearestGhost)){
+                utility += utility + n_c*(1/(float)nearestEdibleGhostDistance) + game.getScore();
+            }
         }
-        /*if (game.isGhostEdible(nearestGhostEdible) && game.getShortestPathDistance(posPacman, nearestEdibleGhostDistance)<=10){
-            utility += utility +(1/(float)nearestGhostDistance) + game.getScore();
-        }*/
 
         // RULE 5: move to the nearest pill
-        if (nearestGhostDistance>=20){
+        if (nearestGhostDistance>=20 || game.isGhostEdible(nearestGhost)){
             utility = utility +(1/(float)nearestPillDistance) + game.getScore();
         }
 
         // RULE 6: move away from ghosts
-        if ((nearestGhostDistance<=10 && !game.isGhostEdible(nearestGhost)) || (nearestGhostDistance<=10 && nearestGhostEdible!=nearestGhost)){
+        if ((nearestGhostDistance<=10 && !game.isGhostEdible(nearestGhost))){
             utility -= 1000;
         }
 
