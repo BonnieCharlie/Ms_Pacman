@@ -27,7 +27,10 @@ public class main {
         //myRunExperiment(new NearestPillPacMan(), new AggressiveGhosts(), numTrials);
         //myRunExperiment(new NearestPillPacMan(), new Legacy(), numTrials);
         //myRunExperiment(new LegacyPacMan(), new Legacy(), numTrials);
-        myRunExperiment(new MyPacMan(RandomGhosts.class.getSimpleName()), new RandomGhosts(), numTrials);
+        long start = System.currentTimeMillis();
+        myRunExperiment(new MyPacMan(Legacy.class.getSimpleName()), new Legacy(), numTrials);
+        long tempo = System.currentTimeMillis() - start;
+        System.out.println("Tempo totale 50 partite: " + tempo + " , Media tempo singola partita: " + tempo/(long)50);
 
     }
 
