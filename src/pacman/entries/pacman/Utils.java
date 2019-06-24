@@ -148,7 +148,6 @@ public class Utils {
         return influence;
     }
 
-
     public static ArrayList<EnumMap<GHOST, MOVE>> legacyMin(Game g) {
 
         ArrayList<EnumMap<GHOST, MOVE>> listMoves = new ArrayList<EnumMap<GHOST, MOVE>>();
@@ -247,7 +246,13 @@ public class Utils {
         return utility;
     }
 
-
+    /*
+    ****************************** Utility function ********************************
+    * It contains some rules to define a good behavior for PacMan movements.
+    * Keep in input an enemy Controller because it is differente for RandomGhosts and Legacy.
+    * Return a float value that represents move's utility.
+    *
+    */
     public static float utilityFunction(Game game, String enemyController) {
 
         int posPacman = game.getPacmanCurrentNodeIndex();
@@ -310,7 +315,6 @@ public class Utils {
 
         //get all active pills
         int[] activePills = game.getActivePillsIndices();
-
         //get all active power pills
         int[] activePowerPills = game.getActivePowerPillsIndices();
 
