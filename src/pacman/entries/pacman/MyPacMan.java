@@ -34,7 +34,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (enemyController.equals("Legacy")){
             this.depthResearch=15;
         }else{
-            this.depthResearch=8;
+            this.depthResearch=6;
         }
     }
 
@@ -72,7 +72,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             //return (float) Utils.InfluenceFunction(game);
             //return (float) Utils.EvaluationFunction(game);
-            return Utils.utilityFunction(game);
+            return Utils.utilityFunction(game, enemyController);
         }
 
         //long s = System.currentTimeMillis();
@@ -120,7 +120,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             //return (float) Utils.InfluenceFunction(game);
             //return (float) Utils.EvaluationFunction(game);
-            return Utils.utilityFunction(game);
+            return Utils.utilityFunction(game, enemyController);
         }
 
         depth = depth - 1;
