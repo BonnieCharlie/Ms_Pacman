@@ -185,7 +185,7 @@ public class Utils {
         }
         if (listMoves.size() == 0) {
             ghostMove.put(GHOST.SUE, MOVE.NEUTRAL);
-            listMoves.add(ghostMove);
+            listMoves.add(ghostMove.clone());
         }
 
         ghostMove.clear();
