@@ -1,0 +1,45 @@
+TEST E MIGLIORAMENTI
+
+Togliendo utility += utility + n_c*(1/(float)nearestEdibleGhostDistance) + game.getScore();
+togliendo rule 1
+AvgScore: 14185.8	MaxScore: 31220.0	MinScore: 2730.0
+Tempo totale 50 partite: 340593 , Media tempo singola partita: 6811
+———————————————————
+rimettendo rule 1
+AvgScore: 12715.4	MaxScore: 29260.0	MinScore: 2780.0
+Tempo totale 50 partite: 714890 , Media tempo singola partita: 14297
+—————————————————————
+Inserendo overallDistanceEdibleGhosts invece della sola distanza dal fantasmino più vicino
+AvgScore: 14143.0	MaxScore: 34730.0	MinScore: 3060.0
+________________________________________________
+pesando i fantasmi in modo diverso per lairTime
+lairtime/40
+AvgScore: 14201.0	MaxScore: 32830.0	MinScore: 1740.0
+________________________________________________
+pesando i fantasmi in modo diverso per lairTime
+lairtime/20
+AvgScore: 13543.6	MaxScore: 30190.0	MinScore: 5300.0
+——————————————————————
+aggiunto controllo se fantasmino mangiabile sta per finire il tempo
+AvgScore: 14334.2	MaxScore: 34830.0	 MinScore: 3960.0
+___________________________________________________
+modifica aggiungendo la distinzione tra nearestUnedibleGhost e nearestEdibleGhost
+AvgScore: 14488.6	MaxScore: 31340.0	MinScore: 2460.0
+___________________________________________________
+se i fantasmini sono mangiabili eliminiamo il contributo delle pill, in modo tale che sia interessato solo a mangiare loro
+No fa schifo
+____________________________________________________
+eliminano right left
+AvgScore: 23321.6	MaxScore: 50280.0	MinScore: 3490.0
+_____________________________________________________
+Aggiungendo un contributo di overallUnedibleGhostDistance
+AvgScore: 26284.2	MaxScore: 51190.0	MinScore: 5410.0
+______________________________________________________
+Introduzione euristica delle giunzioni
+Riusciamo ad incrementare ora la depth a 8
+AvgScore: 30931.0	MaxScore: 59310.0	MinScore: 9890.0
+Tempo totale 50 partite: 29017 , Media tempo singola partita: 580
+
+Con legacy lo score è aumentato incredibilmente
+AvgScore: 5459.8	MaxScore: 12010.0	MinScore: 1570.0
+______________________________________________________
