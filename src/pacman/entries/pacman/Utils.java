@@ -334,21 +334,12 @@ public class Utils {
         int nearestGhostToTheNearestPowerPillDistance = game.getShortestPathDistance(nearestGhostDistance, game.getClosestNodeIndexFromNodeIndex(posPacman, powerPillIndices, DM.PATH));
 
         // *********************** RULES *************************
-        // WINNING CONDITION
-        /*if (n_totalPills + game.getNumberOfActivePowerPills() == 0) {
-            utility += 10000;
-        }
-
-        // LOST CONDITION
-        if (game.gameOver() || game.wasPacManEaten()) {
-            utility -= 1000;
-        }*/
 
         if (enemyController.equals("RandomGhosts")) {
 
             // RULE 1: move to the nearest power pill
             if (game.getNumberOfActivePowerPills() > 1 && nearestGhostDistance <= 8 && nearestPowerPillDistance <= nearestGhostToTheNearestPowerPillDistance) {
-                utility += nearestPowerPillDistance;
+                utility += 1 / (float) nearestPowerPillDistance + game.getScore();
             }
 
             // RULE 2: move to the nearest edible ghost if exists at least one edible ghost
@@ -373,12 +364,34 @@ public class Utils {
                 utility -= overallDistanceUnedibleGhost;
             }
 
-        } else {
+        } else { // Legacy controller
+
+            // WINNING CONDITION
+            /*if (n_totalPills + game.getNumberOfActivePowerPills() == 0) {
+                utility += 10000;
+            }*/
+
+            // LOST CONDITION
+            if (game.gameOver() || game.wasPacManEaten()) {
+                utility -= 1000;
+            }
+
+            /*int n_nearGhosts = 0;
+            for (GHOST ghost : GHOST.values()) {
+                if (1 / ghostsDistances.get(ghost) <= 10) {
+                    n_nearGhosts++;
+                }
+            }*/
 
             // RULE 1: move to the nearest power pill
-            if (game.getNumberOfActivePowerPills() > 1 && nearestGhostDistance <= 8 && nearestPowerPillDistance <= nearestGhostToTheNearestPowerPillDistance) {
-                utility += nearestPowerPillDistance + game.getScore();
+            if (game.getNumberOfActivePowerPills() >= 1 && (1 / ghostsDistances.get(GHOST.BLINKY) <= 10 && 1 / ghostsDistances.get(GHOST.PINKY) <= 10 && 1 / ghostsDistances.get(GHOST.INKY) <= 10)) {
+                utility += 1 / (float) nearestPowerPillDistance + game.getScore();
             }
+
+            //RULE : don't move to the nearest power pill when you are alone
+            /*if (game.getNumberOfActivePowerPills() >= 1 && (1 / ghostsDistances.get(GHOST.BLINKY) > 30 && 1 / ghostsDistances.get(GHOST.PINKY) > 30 && 1 / ghostsDistances.get(GHOST.INKY) > 30) && n_c == 0) {
+                utility -= 1000;
+            }*/
 
             // RULE 2: move to the nearest edible ghost if exists at least one edible ghost
             if (n_c >= 1 && nearestUnedibleGhostDistance > 20 && nearestEdibleGhostDistance < 20) {
@@ -388,13 +401,20 @@ public class Utils {
             }
 
             // RULE 3: move to the nearest pill
-            if (nearestUnedibleGhostDistance >= 20) {
-                utility = utility + (1 / (float) nearestPillDistance) + n_d_signed + game.getScore();
-            }
+            utility = utility + (1 / (float) nearestPillDistance) + n_d_signed + game.getScore();
 
-            // RULE 4: move away from ghosts
-            if (nearestUnedibleGhostDistance <= 10) {
+            // RULE 4: move away from all ghosts
+            if (!game.isGhostEdible(GHOST.BLINKY) && 1 / ghostsDistances.get(GHOST.BLINKY) < 20) {
                 utility -= 1000;
+            }
+            if (!game.isGhostEdible(GHOST.PINKY) && 1 / ghostsDistances.get(GHOST.PINKY) < 20) {
+                utility -= 1000;
+            }
+            if (!game.isGhostEdible(GHOST.INKY) && 1 / ghostsDistances.get(GHOST.INKY) < 20) {
+                utility -= 1000;
+            }
+            if (!game.isGhostEdible(GHOST.SUE) && 1 / ghostsDistances.get(GHOST.SUE) <= 10) {
+                utility -= 500;
             }
 
             // RULE 5: considering overall distance from ghosts

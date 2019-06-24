@@ -45,3 +45,12 @@ AvgScore: 5459.8	MaxScore: 12010.0	MinScore: 1570.0
 ______________________________________________________
 Modificando la funzione di utilità utilizzando contributi pesati nell'overallUnedibleGhostDistance
 AvgScore: 6159.4	MaxScore: 14350.0	MinScore: 2520.0
+
+_______________________________________________________
+Nel legacy l'obiettivo è mangiare quante più pill possibile, quindi il contributo delle pill è sempre presente
+AvgScore: 7632.0	MaxScore: 20970.0	MinScore: 2360.0
+AvgScore: 7225.4	MaxScore: 26460.0	MinScore: 880.0
+AvgScore: 8506.5	MaxScore: 31710.0	MinScore: 1530.0 --> depth 30
+
+Utilizzando il controllore dei random
+AvgScore: 5257.8	MaxScore: 14550.0	MinScore: 1650.0
