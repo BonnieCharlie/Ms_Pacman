@@ -154,63 +154,45 @@ public class Utils {
         ArrayList<EnumMap<GHOST, MOVE>> listMoves = new ArrayList<EnumMap<GHOST, MOVE>>();
         EnumMap<GHOST, MOVE> ghostMove = new EnumMap<GHOST, MOVE>(GHOST.class);
         int targetNode = g.getPacmanCurrentNodeIndex();
-        //Random rnd = new Random();
-        MOVE[] moves = MOVE.values();
 
-        for (GHOST ghostType : GHOST.values()) {
-            if (ghostType == GHOST.SUE) {
+        if (g.isGhostEdible(GHOST.BLINKY)) {
+            ghostMove.put(GHOST.BLINKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.BLINKY), targetNode, g.getGhostLastMoveMade(GHOST.BLINKY), DM.PATH));
+        } else {
+            ghostMove.put(GHOST.BLINKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.BLINKY), targetNode, g.getGhostLastMoveMade(GHOST.BLINKY), DM.PATH));
+        }
+        if (g.isGhostEdible(GHOST.INKY)) {
+            ghostMove.put(GHOST.INKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.INKY), targetNode, g.getGhostLastMoveMade(GHOST.INKY), DM.MANHATTAN));
+        } else {
+            ghostMove.put(GHOST.INKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.INKY), targetNode, g.getGhostLastMoveMade(GHOST.INKY), DM.MANHATTAN));
+        }
+        if (g.isGhostEdible(GHOST.PINKY)) {
+            ghostMove.put(GHOST.PINKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.PINKY), targetNode, g.getGhostLastMoveMade(GHOST.PINKY), DM.EUCLID));
+        } else {
+            ghostMove.put(GHOST.PINKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.PINKY), targetNode, g.getGhostLastMoveMade(GHOST.PINKY), DM.EUCLID));
+        }
 
-                // If ghost is edible, he doesn't follow pacman
-                if (g.isGhostEdible(ghostType)) {
-                    ghostMove.put(GHOST.SUE, g.getGhostLastMoveMade(GHOST.SUE));
-                } else {
-                    MOVE[] possibleMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(GHOST.SUE));
-                    if (possibleMoves.length<3){
-                        possibleMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(GHOST.SUE), g.getGhostLastMoveMade(GHOST.SUE));
-                    }
-                    for (MOVE move : possibleMoves) {
-                        ghostMove.put(GHOST.SUE, move);
-                        listMoves.add(ghostMove.clone());
-                    }
-                }
-                //ghostMove.put(ghostType, MOVE.NEUTRAL);
+        if (g.isGhostEdible(GHOST.SUE)) {
+            ghostMove.put(GHOST.SUE, g.getGhostLastMoveMade(GHOST.SUE));
+        } else {
+            MOVE[] possibleMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(GHOST.SUE));
+            if (possibleMoves.length < 3) {
+                possibleMoves = g.getPossibleMoves(g.getGhostCurrentNodeIndex(GHOST.SUE), g.getGhostLastMoveMade(GHOST.SUE));
             }
-            if (ghostType == GHOST.BLINKY) {
-                // If ghost is edible, he doesn't follow pacman
-                if (g.isGhostEdible(ghostType)) {
-                    ghostMove.put(GHOST.BLINKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.BLINKY), targetNode, g.getGhostLastMoveMade(GHOST.BLINKY), DM.PATH));
-                } else {
-                    ghostMove.put(GHOST.BLINKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.BLINKY), targetNode, g.getGhostLastMoveMade(GHOST.BLINKY), DM.PATH));
-                }
-            } else if (ghostType == GHOST.INKY) {
-                // If ghost is edible, he doesn't follow pacman
-                if (g.isGhostEdible(ghostType)) {
-                    ghostMove.put(GHOST.INKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.INKY), targetNode, g.getGhostLastMoveMade(GHOST.INKY), DM.MANHATTAN));
-                } else {
-                    ghostMove.put(GHOST.INKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.INKY), targetNode, g.getGhostLastMoveMade(GHOST.INKY), DM.MANHATTAN));
-                }
-            } else if (ghostType == GHOST.PINKY) {
-                // If ghost is edible, he doesn't follow pacman
-                if (g.isGhostEdible(ghostType)) {
-                    ghostMove.put(GHOST.PINKY, g.getApproximateNextMoveAwayFromTarget(g.getGhostCurrentNodeIndex(GHOST.PINKY), targetNode, g.getGhostLastMoveMade(GHOST.PINKY), DM.EUCLID));
-                } else {
-                    ghostMove.put(GHOST.PINKY, g.getApproximateNextMoveTowardsTarget(g.getGhostCurrentNodeIndex(GHOST.PINKY), targetNode, g.getGhostLastMoveMade(GHOST.PINKY), DM.EUCLID));
-
-                }
+            for (MOVE move : possibleMoves) {
+                ghostMove.put(GHOST.SUE, move);
+                listMoves.add(ghostMove.clone());
             }
         }
         if (listMoves.size() == 0) {
             ghostMove.put(GHOST.SUE, MOVE.NEUTRAL);
             listMoves.add(ghostMove);
         }
-        //System.out.println(ghostMove);
-        //System.out.println(listMoves);
+
         ghostMove.clear();
-        //System.out.println("List moves 2: " +listMoves);
         return listMoves;
     }
 
-    public static float rulesUtilityFunction(Game game){
+    public static float rulesUtilityFunction(Game game) {
 
         if (game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             return Float.MAX_VALUE;
@@ -224,21 +206,21 @@ public class Utils {
         int[] pillIndices = game.getPowerPillIndices();
         int minDistancePill = -1;
         int minDistanceGhost = Integer.MAX_VALUE;
-        int activePowerPills= game.getNumberOfActivePowerPills();
+        int activePowerPills = game.getNumberOfActivePowerPills();
         float utility = 0;
 
         EnumMap<GHOST, Integer> distanceGhosts = new EnumMap<GHOST, Integer>(GHOST.class);
 
         // Save a map of ghosts distances and the minimum distance
-        for (GHOST ghost: GHOST.values()){
-            int dist = game.getShortestPathDistance(posPacman,game.getGhostCurrentNodeIndex(ghost));
+        for (GHOST ghost : GHOST.values()) {
+            int dist = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
             //System.out.println(dist);
-            if (dist ==-1){
+            if (dist == -1) {
                 dist = 10000;
             }
-            distanceGhosts.put(ghost,dist);
-            if(dist<minDistanceGhost){
-                minDistanceGhost=dist;
+            distanceGhosts.put(ghost, dist);
+            if (dist < minDistanceGhost) {
+                minDistanceGhost = dist;
             }
         }
 
@@ -247,18 +229,18 @@ public class Utils {
 
         int numFarGhosts = 0;
         // RULES
-        for (EnumMap.Entry<GHOST,Integer> entry: distanceGhosts.entrySet()){
+        for (EnumMap.Entry<GHOST, Integer> entry : distanceGhosts.entrySet()) {
             int value = entry.getValue();
-            if (value > 40){
+            if (value > 40) {
                 numFarGhosts++;
             }
         }
-        utility += 100*numFarGhosts;
-        if (minDistanceGhost > 20){
-            utility = utility +(1/(float)minDistancePill)*1000 + score;
+        utility += 100 * numFarGhosts;
+        if (minDistanceGhost > 20) {
+            utility = utility + (1 / (float) minDistancePill) * 1000 + score;
         }
         //System.out.println(minDistanceGhost);
-        if(minDistanceGhost <20){
+        if (minDistanceGhost < 20) {
             utility -= 200;
         }
         //System.out.println(utility);
@@ -266,10 +248,10 @@ public class Utils {
     }
 
 
-    public static float utilityFunction(Game game, String enemyController){
+    public static float utilityFunction(Game game, String enemyController) {
 
         int posPacman = game.getPacmanCurrentNodeIndex();
-        int [] powerPillIndices = game.getPowerPillIndices();
+        int[] powerPillIndices = game.getPowerPillIndices();
         int nearestPowerPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, powerPillIndices, DM.PATH));
         int nearestGhostDistance = Integer.MAX_VALUE;
         int nearestEdibleGhostDistance = Integer.MAX_VALUE;
@@ -283,35 +265,42 @@ public class Utils {
         int nearestPillDistance = 0;
 
         // Save a map of ghosts distances and the minimum distance
-        for (GHOST ghost: GHOST.values()){
-            int dist = game.getShortestPathDistance(posPacman,game.getGhostCurrentNodeIndex(ghost));
+        for (GHOST ghost : GHOST.values()) {
+            int dist = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghost));
             //System.out.println(dist);
-            if (dist ==-1){
+            if (dist == -1) {
                 dist = 1000;
             }
-            if(dist<nearestGhostDistance){
-                nearestGhostDistance=dist;
+            if (dist < nearestGhostDistance) {
+                nearestGhostDistance = dist;
             }
         }
 
         float overallDistanceEdibleGhost = 0;
         float overallDistanceUnedibleGhost = 0;
+        EnumMap<GHOST, Float> ghostsDistances = new EnumMap<GHOST, Float>(GHOST.class);
+        ghostsDistances.put(GHOST.BLINKY, (float) 0);
+        ghostsDistances.put(GHOST.INKY, (float) 0);
+        ghostsDistances.put(GHOST.PINKY, (float) 0);
+        ghostsDistances.put(GHOST.SUE, (float) 0);
 
         int nearestUnedibleGhostDistance = Integer.MAX_VALUE;
 
         for (GHOST ghostType : GHOST.values()) {
             if (!game.isGhostEdible(ghostType) && game.getGhostLairTime(ghostType) == 0) {
-                int ghostUnedibleDistance = game.getShortestPathDistance(posPacman,game.getGhostCurrentNodeIndex(ghostType));
-                overallDistanceUnedibleGhost += (1/(float)ghostUnedibleDistance);
-                if (ghostUnedibleDistance<nearestUnedibleGhostDistance){
-                    nearestUnedibleGhostDistance=ghostUnedibleDistance;
+                int ghostUnedibleDistance = game.getShortestPathDistance(posPacman, game.getGhostCurrentNodeIndex(ghostType));
+
+                ghostsDistances.put(ghostType, 1 / (float) ghostUnedibleDistance);
+                overallDistanceUnedibleGhost += 1 / (float) ghostUnedibleDistance;
+                if (ghostUnedibleDistance < nearestUnedibleGhostDistance) {
+                    nearestUnedibleGhostDistance = ghostUnedibleDistance;
                 }
                 n_r++;
             } else if (game.isGhostEdible(ghostType)) {
                 int posGhost = game.getGhostCurrentNodeIndex(ghostType);
                 int distanceBetweenGhostAndPacman = game.getShortestPathDistance(posPacman, posGhost);
-                overallDistanceEdibleGhost += (ghostType.initialLairTime/(float)20) * (1/(float)distanceBetweenGhostAndPacman);
-                if(distanceBetweenGhostAndPacman < nearestEdibleGhostDistance){
+                overallDistanceEdibleGhost += (ghostType.initialLairTime / (float) 20) * (1 / (float) distanceBetweenGhostAndPacman);
+                if (distanceBetweenGhostAndPacman < nearestEdibleGhostDistance) {
                     nearestEdibleGhostDistance = distanceBetweenGhostAndPacman;
                     nearestEdibleGhost = ghostType;
                 }
@@ -320,25 +309,25 @@ public class Utils {
         }
 
         //get all active pills
-        int[] activePills=game.getActivePillsIndices();
+        int[] activePills = game.getActivePillsIndices();
 
         //get all active power pills
-        int[] activePowerPills=game.getActivePowerPillsIndices();
+        int[] activePowerPills = game.getActivePowerPillsIndices();
 
         //create a target array that includes all ACTIVE pills and power pills
-        int[] targetNodeIndices=new int[activePills.length+activePowerPills.length];
-        for(int i=0;i<activePills.length;i++)
-            targetNodeIndices[i]=activePills[i];
-        for(int i=0;i<activePowerPills.length;i++)
-            targetNodeIndices[activePills.length+i]=activePowerPills[i];
+        int[] targetNodeIndices = new int[activePills.length + activePowerPills.length];
+        for (int i = 0; i < activePills.length; i++)
+            targetNodeIndices[i] = activePills[i];
+        for (int i = 0; i < activePowerPills.length; i++)
+            targetNodeIndices[activePills.length + i] = activePowerPills[i];
 
-        try{
-            if(targetNodeIndices.length == 0){
+        try {
+            if (targetNodeIndices.length == 0) {
                 nearestPillDistance = 1;
-            }else{
+            } else {
                 nearestPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, targetNodeIndices, DM.PATH));
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage() + "  targetNodeIndices: " + Arrays.toString(targetNodeIndices) + "    posPacman: " + posPacman);
         }
         //int nearestPillDistance = game.getShortestPathDistance(posPacman, game.getClosestNodeIndexFromNodeIndex(posPacman, targetNodeIndices, DM.PATH));
@@ -355,62 +344,63 @@ public class Utils {
             utility -= 1000;
         }*/
 
-        if (enemyController.equals("RandomGhosts")){
+        if (enemyController.equals("RandomGhosts")) {
 
             // RULE 1: move to the nearest power pill
-            if(game.getNumberOfActivePowerPills()>1 && nearestGhostDistance <=8 && nearestPowerPillDistance<=nearestGhostToTheNearestPowerPillDistance){
+            if (game.getNumberOfActivePowerPills() > 1 && nearestGhostDistance <= 8 && nearestPowerPillDistance <= nearestGhostToTheNearestPowerPillDistance) {
                 utility += nearestPowerPillDistance;
             }
 
             // RULE 2: move to the nearest edible ghost if exists at least one edible ghost
-            if(n_c >= 1 && nearestUnedibleGhostDistance > 20 && nearestEdibleGhostDistance <20 ){
-                if((game.getGhostEdibleTime(nearestEdibleGhost)>2)){
-                    utility = utility + n_c*(overallDistanceEdibleGhost) + game.getScore();
+            if (n_c >= 1 && nearestUnedibleGhostDistance > 20 && nearestEdibleGhostDistance < 20) {
+                if ((game.getGhostEdibleTime(nearestEdibleGhost) > 2)) {
+                    utility = utility + n_c * (overallDistanceEdibleGhost) + game.getScore();
                 }
             }
 
             // RULE 3: move to the nearest pill
-            if (nearestUnedibleGhostDistance>=20){
-                utility = utility +(1/(float)nearestPillDistance) + n_d_signed + game.getScore();
+            if (nearestUnedibleGhostDistance >= 20) {
+                utility = utility + (1 / (float) nearestPillDistance) + n_d_signed + game.getScore();
             }
 
             // RULE 4: move away from ghosts
-            if (nearestUnedibleGhostDistance<=10){
+            if (nearestUnedibleGhostDistance <= 10) {
                 utility -= 1000;
             }
 
             // RULE 5: considering overall distance from ghosts
-            if (nearestUnedibleGhostDistance<20){
-                utility -= 1/overallDistanceUnedibleGhost;
+            if (nearestUnedibleGhostDistance < 20) {
+                utility -= overallDistanceUnedibleGhost;
             }
 
-        }else{
+        } else {
 
             // RULE 1: move to the nearest power pill
-            if(game.getNumberOfActivePowerPills()>1 && nearestGhostDistance <=8 && nearestPowerPillDistance<=nearestGhostToTheNearestPowerPillDistance){
-                utility += nearestPowerPillDistance;
+            if (game.getNumberOfActivePowerPills() > 1 && nearestGhostDistance <= 8 && nearestPowerPillDistance <= nearestGhostToTheNearestPowerPillDistance) {
+                utility += nearestPowerPillDistance + game.getScore();
             }
 
             // RULE 2: move to the nearest edible ghost if exists at least one edible ghost
-            if(n_c >= 1 && nearestUnedibleGhostDistance > 20 && nearestEdibleGhostDistance <20 ){
-                if((game.getGhostEdibleTime(nearestEdibleGhost)>2)){
-                    utility = utility + n_c*(overallDistanceEdibleGhost) + game.getScore();
+            if (n_c >= 1 && nearestUnedibleGhostDistance > 20 && nearestEdibleGhostDistance < 20) {
+                if ((game.getGhostEdibleTime(nearestEdibleGhost) > 4)) {
+                    utility = utility + 4 * overallDistanceEdibleGhost + game.getScore();
                 }
             }
 
             // RULE 3: move to the nearest pill
-            if (nearestUnedibleGhostDistance>=20){
-                utility = utility +(1/(float)nearestPillDistance) + n_d_signed + game.getScore();
+            if (nearestUnedibleGhostDistance >= 20) {
+                utility = utility + (1 / (float) nearestPillDistance) + n_d_signed + game.getScore();
             }
 
             // RULE 4: move away from ghosts
-            if (nearestUnedibleGhostDistance<=10){
+            if (nearestUnedibleGhostDistance <= 10) {
                 utility -= 1000;
             }
 
             // RULE 5: considering overall distance from ghosts
-            if (nearestUnedibleGhostDistance<20){
-                utility -= 1/overallDistanceUnedibleGhost;
+            if (nearestUnedibleGhostDistance < 20) {
+                utility = utility - (float) (2 * ghostsDistances.get(GHOST.BLINKY) + ghostsDistances.get(GHOST.PINKY) + 0.5 * ghostsDistances.get(GHOST.INKY) + 0.25 * ghostsDistances.get(GHOST.SUE));
+                //utility = utility - overallDistanceUnedibleGhost;
             }
 
         }

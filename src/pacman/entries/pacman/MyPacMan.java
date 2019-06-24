@@ -32,7 +32,7 @@ public class MyPacMan extends Controller<MOVE> {
         this.enemyController = enemyController;
         //System.out.println(enemyController);
         if (enemyController.equals("Legacy")){
-            this.depthResearch=15;
+            this.depthResearch=12;
         }else{
             this.depthResearch=8;
         }
@@ -52,7 +52,6 @@ public class MyPacMan extends Controller<MOVE> {
         return bestMove;
     }
 
-
     private MOVE expectMinMax(Game game) {
         float bestScore = Float.MIN_VALUE;
 
@@ -68,10 +67,9 @@ public class MyPacMan extends Controller<MOVE> {
                 bestMOVE = move;
             }
         }
-
-
         return bestMOVE;
     }
+
 
     private float getMin(Game game, int depth) {
 

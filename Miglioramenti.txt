@@ -37,9 +37,11 @@ AvgScore: 26284.2	MaxScore: 51190.0	MinScore: 5410.0
 ______________________________________________________
 Introduzione euristica delle giunzioni
 Riusciamo ad incrementare ora la depth a 8
-AvgScore: 30931.0	MaxScore: 59310.0	MinScore: 9890.0
-Tempo totale 50 partite: 29017 , Media tempo singola partita: 580
+AvgScore: 31609.8	MaxScore: 72400.0	MinScore: 3610.0
+Tempo totale 50 partite: 33623 , Media tempo singola partita: 672
 
 Con legacy lo score è aumentato incredibilmente
 AvgScore: 5459.8	MaxScore: 12010.0	MinScore: 1570.0
 ______________________________________________________
+Modificando la funzione di utilità utilizzando contributi pesati nell'overallUnedibleGhostDistance
+AvgScore: 6159.4	MaxScore: 14350.0	MinScore: 2520.0
