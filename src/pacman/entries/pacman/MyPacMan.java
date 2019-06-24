@@ -32,9 +32,9 @@ public class MyPacMan extends Controller<MOVE> {
         this.enemyController = enemyController;
         //System.out.println(enemyController);
         if (enemyController.equals("Legacy")){
-            this.depthResearch=16;
+            this.depthResearch=15;
         }else{
-            this.depthResearch=8;
+            this.depthResearch=6;
         }
     }
 

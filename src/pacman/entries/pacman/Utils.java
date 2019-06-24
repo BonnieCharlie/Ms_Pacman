@@ -274,7 +274,7 @@ public class Utils {
         EnumMap<GHOST, Integer> distanceGhosts = new EnumMap<GHOST, Integer>(GHOST.class);
         int nearestGhostDistance = Integer.MAX_VALUE;
         int nearestEdibleGhostDistance = Integer.MAX_VALUE;
-        GHOST nearestGhostEdible = GHOST.BLINKY;
+        GHOST nearestEdibleGhost = GHOST.BLINKY;
         GHOST nearestGhost = GHOST.SUE;
         float utility = 0;
         int n_r = 0; // number of unedible ghosts
@@ -300,9 +300,16 @@ public class Utils {
 
         int[] ghostUnedibleIndices = new int[4];
         int[] ghostEdibleIndices = new int[4];
+        int nearestUnedibleGhostDistance = Integer.MAX_VALUE;
+        GHOST nearestUnedibleGhost;
         for (GHOST ghostType : GHOST.values()) {
             if (!game.isGhostEdible(ghostType) && game.getGhostLairTime(ghostType) == 0) { //
                 ghostUnedibleIndices[n_r] = game.getGhostCurrentNodeIndex(ghostType);
+                int ghostUnedibleDistance = game.getShortestPathDistance(posPacman,game.getGhostCurrentNodeIndex(ghostType));
+                if (ghostUnedibleDistance<nearestUnedibleGhostDistance){
+                    nearestUnedibleGhostDistance=ghostUnedibleDistance;
+                    nearestUnedibleGhost = ghostType;
+                }
                 n_r++;
             } else if (game.isGhostEdible(ghostType)) {
                 int posGhost = game.getGhostCurrentNodeIndex(ghostType);
@@ -311,7 +318,7 @@ public class Utils {
                 overallDistanceEdibleGhost += (ghostType.initialLairTime/(float)20) * (1/(float)distanceBetweenGhostAndPacman);
                 if(distanceBetweenGhostAndPacman < nearestEdibleGhostDistance){
                     nearestEdibleGhostDistance = distanceBetweenGhostAndPacman;
-                    nearestGhostEdible = ghostType;
+                    nearestEdibleGhost = ghostType;
                 }
                 n_c++;
             }
@@ -362,8 +369,8 @@ public class Utils {
         }
 
         // RULE 2: move to the nearest edible ghost if exists at least one edible ghost
-        if(n_c >= 1 && nearestGhostDistance <= 20 && nearestEdibleGhostDistance <=20 ){
-            if(game.isGhostEdible(nearestGhost) && (game.getGhostEdibleTime(nearestGhost)>2)){
+        if(n_c >= 1 && nearestUnedibleGhostDistance > 20 && nearestEdibleGhostDistance <20 ){
+            if((game.getGhostEdibleTime(nearestEdibleGhost)>2)){
                 utility = utility + n_c*(overallDistanceEdibleGhost) + game.getScore();
             }
         }
