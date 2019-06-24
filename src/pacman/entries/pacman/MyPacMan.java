@@ -34,7 +34,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (enemyController.equals("Legacy")){
             this.depthResearch=15;
         }else{
-            this.depthResearch=6;
+            this.depthResearch=8;
         }
     }
 
@@ -42,7 +42,7 @@ public class MyPacMan extends Controller<MOVE> {
 
         long t = System.currentTimeMillis();
         MOVE bestMove = expectMinMax(game);
-        System.err.println("TIME EXEC " + (System.currentTimeMillis() - t));
+        //System.err.println("TIME EXEC " + (System.currentTimeMillis() - t));
         return bestMove;
     }
 
@@ -128,7 +128,8 @@ public class MyPacMan extends Controller<MOVE> {
         float utility = Float.MIN_VALUE;
         float bestScore = utility;
 
-        MOVE[] legalMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
+        //DON'T CONSIDER THE OPPOSITE OF THE LAST MOVE MADE BECAUSE IT EXPANDS A SOLUTION ALREADY CALCULATED
+        MOVE[] legalMoves= game.getPossibleMoves(game.getPacmanCurrentNodeIndex(), game.getPacmanLastMoveMade());
 
         for (MOVE move : legalMoves) {
             Game gameMAX = game.copy();
