@@ -86,17 +86,9 @@ public class MyPacMan extends Controller<MOVE> {
             for (GHOST ghost : GHOST.values()) {
 
                 int positionGHOST = game.getGhostCurrentNodeIndex(ghost);
-                //System.out.println("EDIBLE TIME " +game.getGhostEdibleTime(ghost));
-                //System.out.println("Is Edible " + game.isGhostEdible(ghost));
-
                 //UPSTREAM HEURISTIC
-                // IF A GHOST IS IN A CORRIDOR CUT THE REVERSE MOVE
-                if (game.isJunction(positionGHOST)) {
-                    allLegalMoves.add(game.getPossibleMoves(positionGHOST));
-                } else {
-                    allLegalMoves.add(game.getPossibleMoves(positionGHOST, game.getGhostLastMoveMade(ghost)));
-
-                }
+                // THE REVERSE MOVE HAS A LOW PROBABILITY (0.0015) SO THE REVERSAL MOVE IS NOT CONSIDERED
+                allLegalMoves.add(game.getPossibleMoves(positionGHOST, game.getGhostLastMoveMade(ghost)));
             }
             combination = getCombination(allLegalMoves);
             //System.out.println("COMBINATION SIZE ----------- " + combination.size());
