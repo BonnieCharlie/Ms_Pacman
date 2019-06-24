@@ -376,12 +376,12 @@ public class Utils {
         }
 
         // RULE 3: move to the nearest pill
-        if (nearestGhostDistance>=20 || game.isGhostEdible(nearestGhost)){
+        if (nearestUnedibleGhostDistance>=20){
             utility = utility +(1/(float)nearestPillDistance) + n_d_signed + game.getScore();
         }
 
         // RULE 4: move away from ghosts
-        if ((nearestGhostDistance<=10 && !game.isGhostEdible(nearestGhost))){
+        if (nearestUnedibleGhostDistance<=10){
             utility -= 1000;
         }
 
