@@ -1,13 +1,9 @@
 package pacman.game;
 
-import pacman.Executor;
 import pacman.controllers.Controller;
 import pacman.controllers.examples.*;
-import pacman.entries.pacman.LegacyPacMan;
-import pacman.entries.pacman.MyMsPacMan;
 import pacman.entries.pacman.MyPacMan;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Random;
 
@@ -25,8 +21,6 @@ public class main {
         //myRunExperiment(new RandomNonRevPacMan(), new Legacy(), numTrials);
         //myRunExperiment(new NearestPillPacMan(), new RandomGhosts(), numTrials);
         //myRunExperiment(new NearestPillPacMan(), new AggressiveGhosts(), numTrials);
-        //myRunExperiment(new NearestPillPacMan(), new Legacy(), numTrials);
-        //myRunExperiment(new LegacyPacMan(), new Legacy(), numTrials);
         long start = System.currentTimeMillis();
         myRunExperiment(new MyPacMan(RandomGhosts.class.getSimpleName()), new RandomGhosts(), numTrials);
         long tempo = System.currentTimeMillis() - start;

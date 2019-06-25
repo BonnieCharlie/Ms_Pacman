@@ -1,18 +1,12 @@
 package pacman.entries.pacman;
 
-import com.sun.webkit.Timer;
 import pacman.controllers.Controller;
-import pacman.game.Constants;
 import pacman.game.Constants.GHOST;
 
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
-import pacman.game.internal.Ghost;
 
-import java.sql.Array;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 
 import static pacman.entries.pacman.Utils.legacyMin;
@@ -76,7 +70,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             //return (float) Utils.InfluenceFunction(game);
             //return (float) Utils.EvaluationFunction(game);
-            return Utils.utilityFunction(game, enemyController);
+            return Utils.evaluationFunction(game, enemyController);
         }
 
         //long s = System.currentTimeMillis();
@@ -116,7 +110,7 @@ public class MyPacMan extends Controller<MOVE> {
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
             //return (float) Utils.InfluenceFunction(game);
             //return (float) Utils.EvaluationFunction(game);
-            return Utils.utilityFunction(game, enemyController);
+            return Utils.evaluationFunction(game, enemyController);
         }
 
         depth = depth - 1;
