@@ -15,7 +15,7 @@ public class TTest {
 
     public static void main(String args[]) {
 
-        int numTrials = 100;
+        int numTrials = 1000;
         long start = System.currentTimeMillis();
 
         myRunExperiment(new String[]{RandomGhosts.class.getSimpleName(), Legacy.class.getSimpleName()}, new Legacy(), numTrials);
@@ -44,7 +44,7 @@ public class TTest {
         System.out.println("EC1: " + enemyController[0] + " EC2: " + enemyController[1]);
 
 
-        try (PrintWriter pr = new PrintWriter("TTestLegacyEnemy.txt")) {
+        try (PrintWriter pr = new PrintWriter("TTestLegacyEnemy1000.txt")) {
             pr.println("Datasets,"+enemyController[0]+","+enemyController[1]);
             for (int i = 0; i < trials; i++) {
 
