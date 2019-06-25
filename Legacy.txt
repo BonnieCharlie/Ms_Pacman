@@ -1,0 +1,200 @@
+Depth 1:
+AvgScore: 6924.4	MaxScore: 18030.0	MinScore: 650.0
+Depth 2:
+AvgScore: 7922.8	MaxScore: 22200.0	MinScore: 890.0
+Depth 3:
+AvgScore: 5799.2	MaxScore: 19070.0	MinScore: 670.0
+Depth 4:
+AvgScore: 5751.4	MaxScore: 22110.0	MinScore: 1290.0
+Depth 5:
+AvgScore: 5056.4	MaxScore: 19730.0	MinScore: 1290.0
+Depth 6:
+AvgScore: 7952.4	MaxScore: 17520.0	MinScore: 3380.0
+Depth 7:
+AvgScore: 7685.4	MaxScore: 19080.0	MinScore: 1350.0
+Depth 8:
+AvgScore: 7044.8	MaxScore: 21990.0	MinScore: 2260.0
+Depth 9:
+AvgScore: 7270.6	MaxScore: 17790.0	MinScore: 1890.0
+Depth 10:
+AvgScore: 7252.6	MaxScore: 19390.0	MinScore: 1640.0
+Depth 11:
+AvgScore: 8034.0	MaxScore: 21160.0	MinScore: 2680.0
+Depth 12:
+AvgScore: 8042.6	MaxScore: 20560.0	MinScore: 2750.0
+Depth 13:
+AvgScore: 6966.2	MaxScore: 19030.0	MinScore: 2670.0
+Depth 14:
+AvgScore: 6376.8	MaxScore: 17390.0	MinScore: 2730.0
+Depth 15:
+AvgScore: 6698.4	MaxScore: 22530.0	MinScore: 2440.0
+Depth 16:
+AvgScore: 6911.4	MaxScore: 18560.0	MinScore: 3800.0
+Depth 17:
+AvgScore: 7039.0	MaxScore: 20740.0	MinScore: 3670.0
+Depth 18:
+AvgScore: 6628.6	MaxScore: 21210.0	MinScore: 2770.0
+Depth 19:
+AvgScore: 6716.2	MaxScore: 16670.0	MinScore: 3360.0
+Depth 20:
+AvgScore: 6310.6	MaxScore: 14940.0	MinScore: 2420.0
+Depth 21:
+AvgScore: 6553.6	MaxScore: 11870.0	MinScore: 2750.0
+Depth 22:
+AvgScore: 6237.4	MaxScore: 9140.0	MinScore: 1560.0
+Depth 23:
+AvgScore: 5723.6	MaxScore: 12610.0	MinScore: 1660.0
+Depth 24:
+AvgScore: 6874.2	MaxScore: 22280.0	MinScore: 3760.0
+Depth 25:
+AvgScore: 6443.8	MaxScore: 18580.0	MinScore: 2790.0
+Depth 26:
+AvgScore: 6353.6	MaxScore: 14080.0	MinScore: 1890.0
+Depth 27:
+AvgScore: 6741.2	MaxScore: 18910.0	MinScore: 2310.0
+Depth 28:
+AvgScore: 9655.6	MaxScore: 22770.0	MinScore: 3630.0
+Depth 29:
+AvgScore: 8731.6	MaxScore: 21440.0	MinScore: 3210.0
+Depth 30:
+AvgScore: 9288.0	MaxScore: 19650.0	MinScore: 3050.0
+Depth 31:
+AvgScore: 9359.8	MaxScore: 21140.0	MinScore: 3530.0
+Depth 32:
+AvgScore: 9435.0	MaxScore: 24030.0	MinScore: 3880.0
+Depth 33:
+AvgScore: 7104.4	MaxScore: 16110.0	MinScore: 4060.0
+Depth 34:
+AvgScore: 7638.0	MaxScore: 17140.0	MinScore: 1890.0
+Depth 35:
+AvgScore: 6763.8	MaxScore: 14260.0	MinScore: 3390.0
+Depth 36:
+AvgScore: 6902.4	MaxScore: 23320.0	MinScore: 2480.0
+Depth 37:
+AvgScore: 5659.4	MaxScore: 13260.0	MinScore: 3490.0
+Depth 38:
+AvgScore: 6156.2	MaxScore: 13240.0	MinScore: 3020.0
+Depth 39:
+AvgScore: 5534.6	MaxScore: 16250.0	MinScore: 2450.0
+Depth 40:
+AvgScore: 6291.8	MaxScore: 21550.0	MinScore: 3140.0
+Depth 41:
+AvgScore: 5347.2	MaxScore: 9570.0	MinScore: 3280.0
+Depth 42:
+AvgScore: 5841.8	MaxScore: 11770.0	MinScore: 2140.0
+Depth 43:
+AvgScore: 5392.8	MaxScore: 10500.0	MinScore: 1480.0
+Depth 44:
+AvgScore: 4778.2	MaxScore: 9060.0	MinScore: 1840.0
+Depth 45:
+AvgScore: 5005.2	MaxScore: 8720.0	MinScore: 2770.0
+Depth 46:
+AvgScore: 4634.8	MaxScore: 8800.0	MinScore: 1750.0
+Depth 47:
+AvgScore: 4539.4	MaxScore: 8580.0	MinScore: 1410.0
+Depth 48:
+AvgScore: 4447.4	MaxScore: 9320.0	MinScore: 1570.0
+Depth 49:
+AvgScore: 4168.4	MaxScore: 7640.0	MinScore: 1790.0
+Depth 50:
+AvgScore: 4523.8	MaxScore: 8350.0	MinScore: 1990.0
+Depth 51:
+AvgScore: 4317.6	MaxScore: 8130.0	MinScore: 2190.0
+Depth 52:
+AvgScore: 4147.8	MaxScore: 7530.0	MinScore: 1740.0
+Depth 53:
+AvgScore: 4153.4	MaxScore: 11360.0	MinScore: 1740.0
+Depth 54:
+AvgScore: 4297.4	MaxScore: 8500.0	MinScore: 1790.0
+Depth 55:
+AvgScore: 4342.4	MaxScore: 9590.0	MinScore: 1700.0
+Depth 56:
+AvgScore: 3754.2	MaxScore: 6490.0	MinScore: 1750.0
+Depth 57:
+AvgScore: 3653.2	MaxScore: 6480.0	MinScore: 1630.0
+Depth 58:
+AvgScore: 4218.2	MaxScore: 7390.0	MinScore: 2000.0
+Depth 59:
+AvgScore: 3704.0	MaxScore: 6850.0	MinScore: 1740.0
+Depth 60:
+AvgScore: 3968.2	MaxScore: 8220.0	MinScore: 1520.0
+Depth 61:
+AvgScore: 3984.4	MaxScore: 8070.0	MinScore: 1440.0
+Depth 62:
+AvgScore: 3193.6	MaxScore: 7040.0	MinScore: 1170.0
+Depth 63:
+AvgScore: 2747.8	MaxScore: 5560.0	MinScore: 1140.0
+Depth 64:
+AvgScore: 2830.0	MaxScore: 5590.0	MinScore: 1120.0
+Depth 65:
+AvgScore: 2816.4	MaxScore: 5830.0	MinScore: 1160.0
+Depth 66:
+AvgScore: 2511.6	MaxScore: 5680.0	MinScore: 1160.0
+Depth 67:
+AvgScore: 2912.2	MaxScore: 6090.0	MinScore: 1170.0
+Depth 68:
+AvgScore: 2822.2	MaxScore: 6090.0	MinScore: 1170.0
+Depth 69:
+AvgScore: 2718.8	MaxScore: 5660.0	MinScore: 1170.0
+Depth 70:
+AvgScore: 2744.6	MaxScore: 6650.0	MinScore: 1410.0
+Depth 71:
+AvgScore: 2400.4	MaxScore: 4630.0	MinScore: 1120.0
+Depth 72:
+AvgScore: 2680.6	MaxScore: 5330.0	MinScore: 1120.0
+Depth 73:
+AvgScore: 2999.8	MaxScore: 6120.0	MinScore: 1180.0
+Depth 74:
+AvgScore: 2492.6	MaxScore: 7360.0	MinScore: 1180.0
+Depth 75:
+AvgScore: 2560.8	MaxScore: 6460.0	MinScore: 1180.0
+Depth 76:
+AvgScore: 2610.0	MaxScore: 5810.0	MinScore: 1130.0
+Depth 77:
+AvgScore: 2312.2	MaxScore: 4900.0	MinScore: 1150.0
+Depth 78:
+AvgScore: 2817.0	MaxScore: 6790.0	MinScore: 1210.0
+Depth 79:
+AvgScore: 3017.0	MaxScore: 7550.0	MinScore: 1260.0
+Depth 80:
+AvgScore: 2770.8	MaxScore: 6930.0	MinScore: 1090.0
+Depth 81:
+AvgScore: 2790.6	MaxScore: 5790.0	MinScore: 1210.0
+Depth 82:
+AvgScore: 2651.4	MaxScore: 6100.0	MinScore: 1160.0
+Depth 83:
+AvgScore: 2953.4	MaxScore: 6740.0	MinScore: 1160.0
+Depth 84:
+AvgScore: 2679.6	MaxScore: 5780.0	MinScore: 1170.0
+Depth 85:
+AvgScore: 2975.8	MaxScore: 7190.0	MinScore: 1340.0
+Depth 86:
+AvgScore: 2786.2	MaxScore: 6190.0	MinScore: 1150.0
+Depth 87:
+AvgScore: 3317.6	MaxScore: 8840.0	MinScore: 1230.0
+Depth 88:
+AvgScore: 2702.4	MaxScore: 4910.0	MinScore: 1150.0
+Depth 89:
+AvgScore: 3004.8	MaxScore: 5490.0	MinScore: 1290.0
+Depth 90:
+AvgScore: 3096.4	MaxScore: 6000.0	MinScore: 1260.0
+Depth 91:
+AvgScore: 2969.2	MaxScore: 5810.0	MinScore: 1170.0
+Depth 92:
+AvgScore: 2853.4	MaxScore: 7050.0	MinScore: 1160.0
+Depth 93:
+AvgScore: 2759.8	MaxScore: 5870.0	MinScore: 1050.0
+Depth 94:
+AvgScore: 2568.0	MaxScore: 4560.0	MinScore: 1180.0
+Depth 95:
+AvgScore: 2777.0	MaxScore: 6180.0	MinScore: 1120.0
+Depth 96:
+AvgScore: 3050.4	MaxScore: 5320.0	MinScore: 1570.0
+Depth 97:
+AvgScore: 2757.8	MaxScore: 4370.0	MinScore: 1390.0
+Depth 98:
+AvgScore: 3221.4	MaxScore: 5660.0	MinScore: 1480.0
+Depth 99:
+AvgScore: 2890.8	MaxScore: 5620.0	MinScore: 1270.0
+Depth 100:
+AvgScore: 2873.6	MaxScore: 4860.0	MinScore: 1190.0
