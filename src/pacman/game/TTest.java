@@ -15,7 +15,7 @@ public class TTest {
 
     public static void main(String args[]) {
 
-        int numTrials = 2;
+        int numTrials = 100;
         long start = System.currentTimeMillis();
 
         myRunExperiment(new String[]{RandomGhosts.class.getSimpleName(), Legacy.class.getSimpleName()}, new RandomGhosts(), numTrials);
@@ -57,8 +57,8 @@ public class TTest {
                 }
                 System.out.println("Fine partita EC1");
                 while (!game2.gameOver()) {
-                    game.advanceGame(pacManController2.getMove(game.copy(), System.currentTimeMillis() + DELAY),
-                            ghostController.getMove(game.copy(), System.currentTimeMillis() + DELAY));
+                    game2.advanceGame(pacManController2.getMove(game2.copy(), System.currentTimeMillis() + DELAY),
+                            ghostController.getMove(game2.copy(), System.currentTimeMillis() + DELAY));
                 }
                 System.out.println("Fine partita EC2");
 
