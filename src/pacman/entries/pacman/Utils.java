@@ -179,20 +179,20 @@ public class Utils {
                 utility -= 1000;
             }
 
-            // RULE 1: move to the nearest power pill
+            // RULE 1: move to the nearest pill
+            utility = utility + (1 / (float) nearestPillDistance) + n_d_signed + game.getScore();
+
+            // RULE 2: move to the nearest power pill
             if (game.getNumberOfActivePowerPills() >= 1 && (1 / ghostsDistances.get(GHOST.BLINKY) <= 10 && 1 / ghostsDistances.get(GHOST.PINKY) <= 10 && 1 / ghostsDistances.get(GHOST.INKY) <= 10)) {
                 utility += 1 / (float) nearestPowerPillDistance + game.getScore();
             }
 
-            // RULE 2: move to the nearest edible ghost if exists at least one edible ghost
+            // RULE 3: move to the nearest edible ghost if exists at least one edible ghost
             if (n_c >= 1 && nearestUnedibleGhostDistance > 20 && nearestEdibleGhostDistance < 20) {
                 if ((game.getGhostEdibleTime(nearestEdibleGhost) > 4)) {
                     utility = utility + 4 * overallDistanceEdibleGhost + game.getScore();
                 }
             }
-
-            // RULE 3: move to the nearest pill
-            utility = utility + (1 / (float) nearestPillDistance) + n_d_signed + game.getScore();
 
             // RULE 4: move away from all ghosts
             if (!game.isGhostEdible(GHOST.BLINKY) && 1 / ghostsDistances.get(GHOST.BLINKY) < 20) {
