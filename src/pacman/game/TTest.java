@@ -18,7 +18,7 @@ public class TTest {
         int numTrials = 100;
         long start = System.currentTimeMillis();
 
-        myRunExperiment(new String[]{RandomGhosts.class.getSimpleName(), Legacy.class.getSimpleName()}, new RandomGhosts(), numTrials);
+        myRunExperiment(new String[]{RandomGhosts.class.getSimpleName(), Legacy.class.getSimpleName()}, new Legacy(), numTrials);
         long tempo = System.currentTimeMillis() - start;
         System.out.println("Tempo totale " + numTrials + " partite: " + tempo + " , Media tempo singola partita: " + tempo / numTrials);
 
@@ -44,7 +44,7 @@ public class TTest {
         System.out.println("EC1: " + enemyController[0] + " EC2: " + enemyController[1]);
 
 
-        try (PrintWriter pr = new PrintWriter("TTestRandomEnemy.txt")) {
+        try (PrintWriter pr = new PrintWriter("TTestLegacyEnemy.txt")) {
             pr.println("Datasets,"+enemyController[0]+","+enemyController[1]);
             for (int i = 0; i < trials; i++) {
 
