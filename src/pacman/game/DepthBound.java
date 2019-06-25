@@ -12,7 +12,8 @@ import java.util.Random;
 
 import static pacman.game.Constants.DELAY;
 
-public class DepthBund {
+public class DepthBound {
+
 
     public static void main(String args[]) {
 
@@ -40,7 +41,7 @@ public class DepthBund {
         Game game;
         ArrayList<Double[]> performances = new ArrayList<>();
 
-        for (int d = 1; d <= 3; d++) {
+        for (int d = 1; d <= 10; d++) {
             double avgScore = 0;
             double score = 0;
             double maxScore = 0;
