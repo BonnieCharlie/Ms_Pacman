@@ -62,7 +62,7 @@ public final class Constants
 	public static final float LAIR_REDUCTION=0.9f;			//reduction factor by which lair times decrease as level number increases	
 	public static final int LEVEL_RESET_REDUCTION=6;	
 	public static final int COMMON_LAIR_TIME=40;			//time spend in lair after being eaten
-	public static final int LEVEL_LIMIT=20000;				//time limit for a level
+	public static final int LEVEL_LIMIT=2000;				//time limit for a level
 	public static final float GHOST_REVERSAL=0.0015f;		//probability of a global ghost reversal event	
 	public static final int MAX_TIME=200000;				//maximum time a game can be played for
 	public static final int AWARD_LIFE_LEFT=800;			//points awarded for every life left at the end of the game (when time runs out)

@@ -1,6 +1,7 @@
 package pacman.game;
 
 import pacman.controllers.Controller;
+import pacman.controllers.examples.Legacy;
 import pacman.controllers.examples.RandomGhosts;
 import pacman.entries.pacman.MyPacMan;
 import pacman.game.internal.PacMan;
@@ -17,7 +18,7 @@ public class DepthBound {
 
     public static void main(String args[]) {
 
-        int numTrials = 50;
+        int numTrials = 100;
         //myRunExperiment(new RandomPacMan(), new RandomGhosts(), numTrials);
         //myRunExperiment(new RandomPacMan(), new AggressiveGhosts(), numTrials);
         //myRunExperiment(new RandomPacMan(), new Legacy(), numTrials);
@@ -29,7 +30,7 @@ public class DepthBound {
         //myRunExperiment(new NearestPillPacMan(), new Legacy(), numTrials);
         //myRunExperiment(new LegacyPacMan(), new Legacy(), numTrials);
         long start = System.currentTimeMillis();
-        myRunExperiment(RandomGhosts.class.getSimpleName(), new RandomGhosts(), numTrials);
+        myRunExperiment(Legacy.class.getSimpleName(), new Legacy(), numTrials);
         long tempo = System.currentTimeMillis() - start;
         System.out.println("Tempo totale 50 partite: " + tempo + " , Media tempo singola partita: " + tempo / (long) 50);
 
@@ -39,57 +40,48 @@ public class DepthBound {
 
         Random rnd = new Random(0);
         Game game;
-        ArrayList<Double[]> performances = new ArrayList<>();
 
-        for (int d = 1; d <= 10; d++) {
+
+        for (int d = 1; d <= 100; d++) {
             double avgScore = 0;
             double score = 0;
             double maxScore = 0;
             double minScore = 10000000;
             Controller<Constants.MOVE> pacmanController = new MyPacMan(enemyController, d);
-            System.out.println("Pacman Controller with depth  " + d );
-            for (int i = 0; i < trials; i++) {
-                game = new Game(rnd.nextLong());
+            System.out.println("Pacman Controller with depth  " + d);
+            try (PrintWriter pr = new PrintWriter("DepthStats\\Depth"+d+".txt")) {
+                pr.println("Depth " + d + ":");
+                for (int i = 0; i < trials; i++) {
+                    long t = System.currentTimeMillis();
+                    game = new Game(rnd.nextLong());
 
-                while (!game.gameOver()) {
-                    game.advanceGame(pacmanController.getMove(game.copy(), System.currentTimeMillis() + DELAY),
-                            ghostController.getMove(game.copy(), System.currentTimeMillis() + DELAY));
+                    while (!game.gameOver()) {
+                        game.advanceGame(pacmanController.getMove(game.copy(), System.currentTimeMillis() + DELAY),
+                                ghostController.getMove(game.copy(), System.currentTimeMillis() + DELAY));
+                    }
+                    score = game.getScore();
+                    avgScore += score;
+                    if (score > maxScore) {
+                        maxScore = score;
+                    }
+                    if (score < minScore) {
+                        minScore = score;
+                    }
+                    System.out.println(i + "\t" + game.getScore());
+                    //System.out.println("Tempo singola partita : " + (System.currentTimeMillis()- t));
+                    pr.print(score);
+                    pr.println();
                 }
-                score = game.getScore();
-                avgScore += score;
-                if (score > maxScore) {
-                    maxScore = score;
-                }
-                if (score < minScore) {
-                    minScore = score;
-                }
-                //System.out.println(i + "\t" + game.getScore());
+                //pr.print("AvgScore: " + avgScore / trials + "\t" + "MaxScore: " + maxScore + "\t" + "MinScore: " + minScore);
+
+            } catch (Exception e) {
+                System.out.println("Something was wrong");
+                e.printStackTrace();
             }
+            //System.out.println("AvgScore: " + avgScore / trials + "\t" + "MaxScore: " + maxScore + "\t" + "MinScore: " + minScore);
 
-            Double[] scores = {avgScore/trials,maxScore,minScore};
-            System.out.println("AvgScore: " + avgScore/trials + "\t" + "MaxScore: " + maxScore + "\t" + "MinScore: " + minScore);
-            performances.add(scores);
         }
 
-        try
-        {
-
-            PrintWriter pr = new PrintWriter("performance.txt");
-
-            for (int i=0; i<performances.size() ; i++) {
-                pr.println("Depth " + (i+1) + ":");
-                for(int j=0; j<performances.get(i).length; j++){
-                    pr.print(performances.get(i)[j] + "\t");
-                }
-                pr.println();
-            }
-            pr.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            System.out.println("No such file exists.");
-        }
 
     }
 }
