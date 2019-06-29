@@ -27,7 +27,7 @@ modifica aggiungendo la distinzione tra nearestUnedibleGhost e nearestEdibleGhos
 AvgScore: 14488.6	MaxScore: 31340.0	MinScore: 2460.0
 ___________________________________________________
 se i fantasmini sono mangiabili eliminiamo il contributo delle pill, in modo tale che sia interessato solo a mangiare loro
-No fa schifo
+No
 ____________________________________________________
 eliminano right left
 AvgScore: 23321.6	MaxScore: 50280.0	MinScore: 3490.0
