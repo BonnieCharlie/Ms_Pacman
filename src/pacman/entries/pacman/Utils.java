@@ -14,6 +14,15 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
+
+    /*
+     ****************************** Legacy Combinations ********************************
+     * If Expectiminimax receive a legacy enemyController, this function is used to
+     * realize moves combinations. Blinky, Pinky and Inky have a deterministic move,
+     * while Sue could have 3 possible moves if she is in a junction.
+     * Keep in input the game.
+     * Return an arraylist that contains moves combinations.
+     */
     public static ArrayList<EnumMap<GHOST, MOVE>> legacyMin(Game g) {
 
         ArrayList<EnumMap<GHOST, MOVE>> listMoves = new ArrayList<EnumMap<GHOST, MOVE>>();
@@ -65,6 +74,8 @@ public class Utils {
     *
     */
     public static float evaluationFunction(Game game, String enemyController) {
+
+        //*********************** STATEMENTS *************************
 
         int posPacman = game.getPacmanCurrentNodeIndex();
         int[] powerPillIndices = game.getPowerPillIndices();
@@ -215,7 +226,6 @@ public class Utils {
 
         }
 
-        //System.out.println("nearestEdibleGhostDistance: " + nearestEdibleGhostDistance + ", nearestGhostDistance: " + nearestGhostDistance + ", utility = " + utility);
         return utility;
     }
 }

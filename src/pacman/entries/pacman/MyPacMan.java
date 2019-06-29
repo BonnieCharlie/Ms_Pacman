@@ -46,6 +46,10 @@ public class MyPacMan extends Controller<MOVE> {
         return bestMove;
     }
 
+
+    /*
+     ****************************** ExpectiMiniMax ********************************
+     */
     private MOVE expectMinMax(Game game) {
         float bestScore = Float.MIN_VALUE;
 
@@ -64,12 +68,13 @@ public class MyPacMan extends Controller<MOVE> {
         return bestMOVE;
     }
 
-
+    /*
+     ****************************** MIN ********************************
+     * The min phase and possibility phase is combined in this function
+     */
     private float getMin(Game game, int depth) {
 
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
-            //return (float) Utils.InfluenceFunction(game);
-            //return (float) Utils.EvaluationFunction(game);
             return Utils.evaluationFunction(game, enemyController);
         }
 
@@ -104,12 +109,13 @@ public class MyPacMan extends Controller<MOVE> {
 
     }
 
+    /*
+     ****************************** MAX ********************************
+     */
     private float getMax(Game game, int depth) {
         long s = System.currentTimeMillis();
 
         if (depth == 0 || game.gameOver() || game.getNumberOfActivePills() + game.getNumberOfActivePowerPills() == 0) {
-            //return (float) Utils.InfluenceFunction(game);
-            //return (float) Utils.EvaluationFunction(game);
             return Utils.evaluationFunction(game, enemyController);
         }
 
@@ -134,6 +140,13 @@ public class MyPacMan extends Controller<MOVE> {
 
     }
 
+    /*
+     ****************************** RandomGhosts Combinations ********************************
+     * If Expectiminimax receive a RandomGhosts enemyController, this function is used to
+     * realize moves combinations.
+     * Keep in input an arraylist of legal moves for every ghost.
+     * Return an arraylist that contains moves combinations.
+     */
     private ArrayList<EnumMap<GHOST, MOVE>> getCombination(ArrayList<MOVE[]> legalMoves) {
         //long time = System.currentTimeMillis();
         ArrayList<EnumMap<GHOST, MOVE>> combination = new ArrayList<EnumMap<GHOST, MOVE>>();

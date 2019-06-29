@@ -44,7 +44,7 @@ public class TTest {
         System.out.println("EC1: " + enemyController[0] + " EC2: " + enemyController[1]);
 
 
-        try (PrintWriter pr = new PrintWriter("TTestLegacyEnemy1000.txt")) {
+        try (PrintWriter pr = new PrintWriter("TTestLegacyEnemy.txt")) {
             pr.println("Datasets,"+enemyController[0]+","+enemyController[1]);
             for (int i = 0; i < trials; i++) {
 
